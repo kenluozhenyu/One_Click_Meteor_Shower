@@ -58,10 +58,12 @@ Finally the extracted meteor files can be combined to one.
 
 **Known issue:**
 The border of the extracted meteor is too deep. Still need to adjust the algorithm -- **TO DO #3**
-
+![enter image description here](images/final-detail.jpg)
 
 ## Suggestion to users
 
  1. When taking the photos, use equatorial mount for tracking as possible. Reduce the chance of needing to do star-alignment in post-processing
  2. Reduce the exposure time to make the background star/Milkyway to be dimmer. The background image can be taken separately
- 
+ 3. Use the "two-clicks" scripts at this point
+
+**And I still need to find a way to upload the U-NET trained model file.** Stay tune... 
