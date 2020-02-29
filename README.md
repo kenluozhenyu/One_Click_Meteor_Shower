@@ -53,7 +53,7 @@ When the mask generated and resized/extended back to the original photo size, Im
 
 Finally the extracted meteor files can be combined to one.
 
-![(image here)](image/final.jpg)
+![enter image description here](images/final.jpg)
 (I manually added a black background for that)
 
 **Known issue:**
@@ -64,3 +64,4 @@ The border of the extracted meteor is too deep. Still need to adjust the algorit
 
  1. When taking the photos, use equatorial mount for tracking as possible. Reduce the chance of needing to do star-alignment in post-processing
  2. Reduce the exposure time to make the background star/Milkyway to be dimmer. The background image can be taken separately
+ 
