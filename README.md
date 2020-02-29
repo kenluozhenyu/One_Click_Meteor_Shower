@@ -27,12 +27,13 @@ The logic is:
 The corresponding parameters are tuned with the full size images from Canon 5D III and Canon 6D.
 
 It works on a certain level however in my test result it shows some problems:
- 1. **Missing detection**. Dim meteors, short meteors, or meteors closed to the Milkyway, are difficult to be detected. If adjusting the parameters to aggressive the stars/Milkyway will be too much for detecting a line within them.
+ 1. **Missing detection**. Dim meteors, short meteors, or meteors closed to the Milkyway, are difficult to be detected. If adjusting the parameters too aggressive the stars/Milkyway will be too much for detecting a line within them.
  2. **False detection**. Planes, maybe satellites (but lucky they are dim), landscape objects could also be recognized as a line. The most critical problem is that if the photo image is rotated for some degrees for star-alignment propose, the original edge would show some line characters and would be detected as well.
 
 But I have to use this method first...
 
 For "Missing detection", a solution is to try to introduce a tool to allow manually select the meteor object position and record it. -- **TO DO #1**
+
 One more thing is to provide a tool to help to adjust the parameters. User can do some tuning according to their image.
 
 For "False detection", two alternatives:
@@ -66,4 +67,4 @@ The border of the extracted meteor is too deep. Still need to adjust the algorit
  2. Reduce the exposure time to make the background star/Milkyway to be dimmer. The background image can be taken separately
  3. Use the "two-clicks" scripts at this point
 
-**And I still need to find a way to upload the U-NET trained model file.** Stay tune... 
+**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt** 
