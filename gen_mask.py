@@ -293,8 +293,16 @@ class Gen_mask:
                         # if item[0] == 0 and item[1] == 0 and item[2] == 0:
 
                         # This still needs adjustment
-                        # Values like 080805, 0d0c08, 322d28, 0f0f0b, 080906...
-                        if item[0] < 8 and item[1] < 8 and item[2] < 8:
+                        # To remove some quite dark edge around the meteor
+                        #
+                        # Looks like currently 72 could be a reasonable
+                        # threshold
+                        #
+                        # if item[0] < 8 and item[1] < 8 and item[2] < 8:
+                        # if item[0] < 30 and item[1] < 30 and item[2] < 30:
+                        # if item[0] < 80 and item[1] < 80 and item[2] < 80:
+                        #
+                        if item[0] < 72 and item[1] < 72 and item[2] < 72:
                             newData.append((255, 255, 255, 0))
                         else:
                             newData.append(item)
