@@ -58,9 +58,9 @@ Finally the extracted meteor files can be combined to one.
 (I manually added a black background for that)
 
 **Known issue:**
-The border of the extracted meteor is too deep. Still need to adjust the algorithm -- **TO DO #3**
+(Fixed in 2020-03-01 update)
+The border of the extracted meteor is too deep. Still need to adjust the algorithm -- **TO DO #3 (done)**
 ![enter image description here](images/final-detail.jpg)
--- 2020-03-01 update: Solved.
 
 ## Suggestion to users
 
@@ -68,4 +68,4 @@ The border of the extracted meteor is too deep. Still need to adjust the algorit
  2. Reduce the exposure time to make the background star/Milkyway to be dimmer. The background image can be taken separately
  3. Use the "two-clicks" scripts at this point
 
-**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**
+**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt** 
