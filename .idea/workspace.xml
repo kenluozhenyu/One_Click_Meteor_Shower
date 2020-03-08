@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6e6eccdc-d9e2-4746-b0e0-409b107b926a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
@@ -38,6 +37,7 @@
         <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
           <provider selected="true" editor-type-id="text-editor">
             <state>
+              <caret lean-forward="true" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -69,8 +69,8 @@
       <file leaf-file-name="gen_mask.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gen_mask.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4913">
-              <caret line="296" column="25" selection-start-line="296" selection-start-column="25" selection-end-line="296" selection-end-column="25" />
+            <state relative-caret-position="221">
+              <caret line="184" column="64" lean-forward="true" selection-start-line="184" selection-start-column="64" selection-end-line="184" selection-end-column="64" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -81,8 +81,8 @@
       <file leaf-file-name="two_clicks_step2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="391">
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -90,13 +90,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="detection.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="detection.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/detection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="528" column="27" lean-forward="true" selection-start-line="528" selection-start-column="27" selection-end-line="528" selection-end-column="27" />
+            <state relative-caret-position="357">
+              <caret line="951" column="92" selection-start-line="951" selection-start-column="55" selection-end-line="951" selection-end-column="92" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#7547#19587#0" />
+                <element signature="e#19795#21715#0" />
+                <element signature="e#21811#22275#0" />
+                <element signature="e#26956#30464#0" />
+                <element signature="e#32646#34037#0" />
+                <element signature="e#35126#37827#0" />
               </folding>
             </state>
           </provider>
@@ -105,8 +111,17 @@
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="32" column="39" lean-forward="true" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
+            <state relative-caret-position="249">
+              <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="run.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/run.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
             </state>
           </provider>
         </entry>
@@ -116,6 +131,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>get_box_list_from_meteor_lines</find>
+      <find>check_satellite_with_previous_detection_list</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -130,8 +146,9 @@
         <option value="$PROJECT_DIR$/gen_mask.py" />
         <option value="$PROJECT_DIR$/two_clicks_step2.py" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/settings.py" />
         <option value="$PROJECT_DIR$/detection.py" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/run.txt" />
       </list>
     </option>
   </component>
@@ -221,7 +238,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/two_clicks_step1.py" />
-      <option name="PARAMETERS" value="F:\meteor-one-click-2018-08-milkyway" />
+      <option name="PARAMETERS" value="F:\meteor-one-click-test-original-images\star-aligned\" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -251,14 +268,14 @@
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.28240252" side_tool="true" visible="true" weight="0.26826608" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.07903056" side_tool="true" visible="true" weight="0.26608506" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.9209694" visible="true" weight="0.26608506" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" sideWeight="0.49947312" weight="0.3293348" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.7175975" visible="true" weight="0.26826608" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.91780823" weight="0.25627044" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.9209694" weight="0.31079608" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -273,17 +290,79 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/detection.py</url>
-          <line>178</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="4" />
+      <option name="time" value="8" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/saved_model/link.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen_mask.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4913">
+          <caret line="296" column="25" selection-start-line="296" selection-start-column="25" selection-end-line="296" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="32" column="39" lean-forward="true" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8874">
+          <caret line="528" column="27" lean-forward="true" selection-start-line="528" selection-start-column="27" selection-end-line="528" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8041">
@@ -350,6 +429,12 @@
           <caret line="461" column="41" lean-forward="true" selection-start-line="461" selection-start-column="8" selection-end-line="461" selection-end-column="41" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
           </folding>
         </state>
       </provider>
@@ -420,6 +505,12 @@
           <caret line="498" column="67" selection-start-line="498" selection-start-column="67" selection-end-line="498" selection-end-column="67" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
           </folding>
         </state>
       </provider>
@@ -474,6 +565,12 @@
           <caret line="268" column="31" selection-start-line="268" selection-start-column="20" selection-end-line="268" selection-end-column="31" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
           </folding>
         </state>
       </provider>
@@ -525,6 +622,12 @@
           <caret line="268" column="31" selection-start-line="268" selection-start-column="20" selection-end-line="268" selection-end-column="31" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
           </folding>
         </state>
       </provider>
@@ -569,6 +672,12 @@
           <caret line="268" column="31" selection-start-line="268" selection-start-column="20" selection-end-line="268" selection-end-column="31" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
           </folding>
         </state>
       </provider>
@@ -604,16 +713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/gen_mask.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4913">
-          <caret line="296" column="25" selection-start-line="296" selection-start-column="25" selection-end-line="296" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1003">
@@ -621,39 +720,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
+    <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="391">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
+    <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        <state>
+          <caret lean-forward="true" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gen_mask.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="184" column="64" lean-forward="true" selection-start-line="184" selection-start-column="64" selection-end-line="184" selection-end-column="64" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="951" column="92" selection-start-line="951" selection-start-column="55" selection-end-line="951" selection-end-column="92" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#7547#19587#0" />
+            <element signature="e#19795#21715#0" />
+            <element signature="e#21811#22275#0" />
+            <element signature="e#26956#30464#0" />
+            <element signature="e#32646#34037#0" />
+            <element signature="e#35126#37827#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="32" column="39" lean-forward="true" selection-start-line="32" selection-start-column="39" selection-end-line="32" selection-end-column="39" />
+        <state relative-caret-position="249">
+          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/detection.py">
+    <entry file="file://$PROJECT_DIR$/run.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="528" column="27" lean-forward="true" selection-start-line="528" selection-start-column="27" selection-end-line="528" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="272">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>

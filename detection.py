@@ -167,6 +167,79 @@ class HoughBundler:
 
 
 class MeteorDetector:
+    def __init__(self):
+        # In order to detect satellites (or planes), we need to compare
+        # the previous image and the current image.
+        #
+        # If one line in the previous image has the same/similar angel
+        # with one line in the current image, we may consider them as
+        # trails by satellite or plane.
+        #   -- Do we need to have a threshold how faraway these two lines
+        #      can be considered as separated events?
+        #      This is a question needs further monitoring
+        #
+        # So the detection logic would be:
+        # 1) Detect lines in the first image (with subtraction from the 2nd
+        #    image
+        # 2) Store the detection lines, but not generate the extracted images
+        #    at this point
+        # 3) Detect lines for the 2nd image
+        # 4) Compare the detection lines in the previous image and those
+        #    from the current image
+        # 5) If suspicious satellite detected:
+        #    a) For the one belongs to the previous image, put it to the
+        #       "previous_satellite"
+        #    b) Put the satellite in the current image to the "current_satellite"
+        # 6) After checking done:
+        #    a) For the previous image, generate a list with "previous_satellite"
+        #       removed. And then generate the extracted images
+        #    b) For the list in the current image:
+        #       i.  Current detection list -> self.previous_detection_lines
+        #       ii. "current_satellite" -> self."previous_satellite"
+        self.Previous_Image_Detection_Lines = []
+        self.Previous_Image_Satellites = []
+        self.Previous_Image_Filename = ''
+        self.Previous_Image = []
+
+        self.Current_Image_Detection_Lines = []
+        self.Current_Image_Satellites = []
+
+    # When two lines have the similar angel, get the two closest points
+    # This is for next step to determine if these two lines are in the
+    # same line
+    def __get_most_close_two_points_from_two_lines_with_same_angel(self,
+                                                                   l1_x1, l1_y1, l1_x2, l1_y2,
+                                                                   l2_x1, l2_y1, l2_x2, l2_y2,
+                                                                   angel):
+        close_x1 = 0
+        close_y1 = 0
+        close_x2 = 0
+        close_y2 = 0
+
+        if angel >= 0:
+            if min(l1_x1, l1_x2) < min(l2_x1, l2_x2):
+                close_x1 = max(l1_x1, l1_x2)
+                close_y1 = max(l1_y1, l1_y2)
+                close_x2 = min(l2_x1, l2_x2)
+                close_y2 = min(l2_y1, l2_y2)
+            else:
+                close_x1 = min(l1_x1, l1_x2)
+                close_y1 = min(l1_y1, l1_y2)
+                close_x2 = max(l2_x1, l2_x2)
+                close_y2 = max(l2_y1, l2_y2)
+        else:
+            if min(l1_x1, l1_x2) < min(l2_x1, l2_x2):
+                close_x1 = max(l1_x1, l1_x2)
+                close_y1 = min(l1_y1, l1_y2)
+                close_x2 = min(l2_x1, l2_x2)
+                close_y2 = max(l2_y1, l2_y2)
+            else:
+                close_x1 = min(l1_x1, l1_x2)
+                close_y1 = max(l1_y1, l1_y2)
+                close_x2 = max(l2_x1, l2_x2)
+                close_y2 = min(l2_y1, l2_y2)
+
+        return close_x1, close_y1, close_x2, close_y2
 
     def detection_lines_filtering(self, detection_lines, orig_image):
         filtered_false_detection = []
@@ -280,8 +353,14 @@ class MeteorDetector:
             # stand for different direction
             angle = math.atan2((y2 - y1), (x2 - x1))
 
-            # filtered_false_detection.append([x1, y1, x2, y2, x_mid, y_mid, angle])
-            filtered_false_detection.append([x1, y1, x2, y2, angle])
+            # To ensure the angle range is (-pi/2, pi/2)
+            if angle > np.pi / 2:
+                angle = angle - np.pi
+            if angle < -np.pi / 2:
+                angle = np.pi + angle
+
+            filtered_false_detection.append([x1, y1, x2, y2, x_mid, y_mid, angle])
+            # filtered_false_detection.append([x1, y1, x2, y2, angle])
 
         # Step 2:
         # For some real lines, they could be recognized as two short ones during detection
@@ -298,7 +377,7 @@ class MeteorDetector:
 
         # for i in range(len(filtered_false_detection)-1):
         for i in range(len(filtered_false_detection)):
-            angle_1 = filtered_false_detection[i][4]
+            angle_1 = filtered_false_detection[i][6]
 
             if angle_1 == -3.14:
                 # Such value was filled by below algorithm
@@ -306,7 +385,7 @@ class MeteorDetector:
                 continue
 
             for j in range(i + 1, len(filtered_false_detection)):
-                angle_2 = filtered_false_detection[j][4]
+                angle_2 = filtered_false_detection[j][6]
 
                 if abs(angle_1 - angle_2) <= settings.LINE_ANGEL_DELTA_THRESHOLD:
                     # Get the most closed two points
@@ -320,11 +399,12 @@ class MeteorDetector:
                     j_x2 = filtered_false_detection[j][2]
                     j_y2 = filtered_false_detection[j][3]
 
+                    '''
                     close_x1 = 0
                     close_y1 = 0
                     close_x2 = 0
                     close_y2 = 0
-
+                    
                     if angle_1 >= 0:
                         if min(i_x1, i_x2) < min(j_x1, j_x2):
                             close_x1 = max(i_x1, i_x2)
@@ -347,8 +427,19 @@ class MeteorDetector:
                             close_y1 = max(i_y1, i_y2)
                             close_x2 = max(j_x1, j_x2)
                             close_y2 = min(j_y1, j_y2)
+                    '''
+
+                    close_x1, close_y1, close_x2, close_y2 = \
+                        self.__get_most_close_two_points_from_two_lines_with_same_angel(i_x1, i_y1, i_x2, i_y2,
+                                                                                        j_x1, j_y1, j_x2, j_y2,
+                                                                                        angle_1)
 
                     angle_close = math.atan2((close_y2 - close_y1), (close_x2 - close_x1))
+                    if angle_close > np.pi / 2:
+                        angle_close = angle_close - np.pi
+                    if angle_close < -np.pi / 2:
+                        angle_close = np.pi + angle_close
+
                     dist_close = math.sqrt((close_x2 - close_x1) ** 2 + (close_y2 - close_y1) ** 2)
 
                     # dist_1 = math.sqrt((i_x1 - j_x1) ** 2 + (i_y1 - j_y1) ** 2)
@@ -390,18 +481,25 @@ class MeteorDetector:
 
                             new_angel = (angle_1 + angle_2) / 2
 
+                            x_mid_merged = int((merged_x1 + merged_x2) / 2)
+                            y_mid_merged = int((merged_y1 + merged_y2) / 2)
+
                             filtered_false_detection[i][0] = merged_x1
                             filtered_false_detection[i][1] = merged_y1
                             filtered_false_detection[i][2] = merged_x2
                             filtered_false_detection[i][3] = merged_y2
-                            filtered_false_detection[i][4] = new_angel
+                            filtered_false_detection[i][4] = x_mid_merged
+                            filtered_false_detection[i][5] = y_mid_merged
+                            filtered_false_detection[i][6] = new_angel
 
                             filtered_false_detection[j][0] = 0
                             filtered_false_detection[j][1] = 0
                             filtered_false_detection[j][2] = 0
                             filtered_false_detection[j][3] = 0
+                            filtered_false_detection[j][4] = 0
+                            filtered_false_detection[j][5] = 0
                             # Use such an angle to indicate this is removed
-                            filtered_false_detection[j][4] = -3.14
+                            filtered_false_detection[j][6] = -3.14
 
             # End of the j for loop
             # One entry in the i for loop has completely matched with others
@@ -409,7 +507,9 @@ class MeteorDetector:
                                      filtered_false_detection[i][1],
                                      filtered_false_detection[i][2],
                                      filtered_false_detection[i][3],
-                                     filtered_false_detection[i][4]
+                                     filtered_false_detection[i][4],
+                                     filtered_false_detection[i][5],
+                                     filtered_false_detection[i][6]
                                      ])
         return merged_detection
 
@@ -471,6 +571,10 @@ class MeteorDetector:
 
         return draw_x1, draw_y1, draw_x2, draw_y2
 
+    # NOTE:
+    # ==================================================================
+    # As we also need to merge some boxes which have overlap, this
+    # function is to be deprecated !!!
     def get_box_list_from_meteor_lines(self, detection_lines, img_width, img_height):
         box_list = []
 
@@ -559,7 +663,8 @@ class MeteorDetector:
                 center_dist_x = abs(j_x_mid - i_x_mid)
                 center_dist_y = abs(j_y_mid - i_y_mid)
 
-                if center_dist_x < (i_width + j_width)/2 and center_dist_y < (i_width + j_width)/2:
+                if center_dist_x < (i_width + j_width)/2 * settings.BOX_OVERLAP_THRESHOLD\
+                        and center_dist_y < (i_width + j_width)/2 * settings.BOX_OVERLAP_THRESHOLD:
                     # Overlap detected
                     merged_x1 = min([i_x1, i_x2, j_x1, j_x2])
                     merged_y1 = min([i_y1, i_y2, j_y1, j_y2])
@@ -685,7 +790,7 @@ class MeteorDetector:
         else:
             return None
 
-    def draw_detection_boxes_on_image(self, original_img, detection_lines):
+    def draw_detection_boxes_on_image(self, original_img, detection_lines, color):
         # Get the detected lines coordinates
         # detection_lines = self.detect_meteor_from_image(original_img)
 
@@ -712,7 +817,16 @@ class MeteorDetector:
             x2 = line[2]
             y2 = line[3]
 
+            angle = line[6]
+
             cv2.line(draw_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+            cv2.putText(draw_img, '{0:.3f}'.format(angle * 180 / np.pi),
+                        (x2 + 10, y2 + 10),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=3,
+                        color=(255, 255, 255),
+                        lineType=2)
 
             # draw_x1, draw_y1, draw_x2, draw_y2 = \
             #     self.get_box_coordinate_from_meteor_line(x1, y1, x2, y2, width, height)
@@ -724,7 +838,8 @@ class MeteorDetector:
             box_y1 = box[1]
             box_x2 = box[2]
             box_y2 = box[3]
-            cv2.rectangle(draw_img, (box_x1, box_y1), (box_x2, box_y2), (255, 255, 0), 1)
+            # cv2.rectangle(draw_img, (box_x1, box_y1), (box_x2, box_y2), (255, 255, 0), 1)
+            cv2.rectangle(draw_img, (box_x1, box_y1), (box_x2, box_y2), color, 1)
 
         return draw_img
 
@@ -775,20 +890,184 @@ class MeteorDetector:
 
             cv2.imwrite(file_to_save, crop_img)
 
+    # Logic:
+    # 1) For each element in the self.Previous_Image_Detection_List,
+    #    compare with all items in the self.Current_Image_Detection_List
+    # 2) If the two have similar angles, and
+    #    if the line between them, connecting the most closed two points
+    #    have the similar angle, then consider these two are from the
+    #    same satellite object
+    def check_satellite_with_previous_detection_list(self, verbose):
+        for previous_line in self.Previous_Image_Detection_Lines:
+            p_x1 = previous_line[0]
+            p_y1 = previous_line[1]
+            p_x2 = previous_line[2]
+            p_y2 = previous_line[3]
+            p_angle = previous_line[6]
+
+            for current_line in self.Current_Image_Detection_Lines:
+                c_x1 = current_line[0]
+                c_y1 = current_line[1]
+                c_x2 = current_line[2]
+                c_y2 = current_line[3]
+                c_angle = current_line[6]
+
+                if abs(p_angle - c_angle) <= settings.LINE_ANGEL_DELTA_THRESHOLD:
+
+                    close_x1, close_y1, close_x2, close_y2 = \
+                        self.__get_most_close_two_points_from_two_lines_with_same_angel(p_x1, p_y1, p_x2, p_y2,
+                                                                                        c_x1, c_y1, c_x2, c_y2,
+                                                                                        p_angle)
+
+                    '''
+                    angle_close = math.atan2((close_y2 - close_y1), (close_x2 - close_x1))
+                    if angle_close > np.pi / 2:
+                        angle_close = angle_close - np.pi
+                    if angle_close < -np.pi / 2:
+                        angle_close = np.pi + angle_close
+                    '''
+
+                    dist_close = math.sqrt((close_x2 - close_x1) ** 2 + (close_y2 - close_y1) ** 2)
+
+                    '''
+                    # Don't use abs(angle_close - p_angle) + abs(angle_close - c_angle) at this point
+                    # To avoid the delta is too much
+                    if abs((angle_close - p_angle + angle_close - c_angle)/2) \
+                            <= settings.LINE_JOINT_ANGEL_DELTA_THRESHOLD \
+                            or dist_close <= 12:
+                    '''
+                    p_x_mid = previous_line[4]
+                    p_y_mid = previous_line[5]
+                    c_x_mid = current_line[4]
+                    c_y_mid = current_line[5]
+
+                    angel_mid = math.atan2((c_y_mid - p_y_mid), (c_x_mid - p_x_mid))
+                    if angel_mid > np.pi / 2:
+                        angel_mid = angel_mid - np.pi
+                    if angel_mid < -np.pi / 2:
+                        angel_mid = np.pi + angel_mid
+
+                    if abs(angel_mid - p_angle)/2 + abs(angel_mid - c_angle)/2 \
+                            <= settings.LINE_JOINT_ANGEL_DELTA_THRESHOLD \
+                            and dist_close <= settings.LINE_DISTANCE_FOR_SATELLITE_THRESHOLD:
+                        # Ok we can consider these as due to the same satellite
+                        self.Previous_Image_Satellites.append([p_x1, p_y1, p_x2, p_y2, p_x_mid, p_y_mid, p_angle])
+                        self.Current_Image_Satellites.append([c_x1, c_y1, c_x2, c_y2, c_x_mid, c_y_mid, c_angle])
+
+            # end of the for current_line loop
+        # end of the for previous_line loop
+
+        if verbose:
+            print('... {} detected {} satellites'.format(self.Previous_Image_Filename,
+                                                         len(self.Previous_Image_Satellites)))
+
+    # Logic:
+    # 1) Detect the lines from current image (orig_filename)
+    # 2) Compare the current detection list with the stored
+    #    previous detection list, to detect if any possible
+    #    satellites
+    # 3) Exclude the possible satellites from the previous
+    #    detection list
+    # 4) Extract the detection objects from the previous image
+    def detect_n_process_the_previous_image(self, file_dir, orig_filename, save_dir, file_for_subtraction, verbose):
+        # Directory to save the image drawn with detection boxes
+        draw_box_file_dir = os.path.join(save_dir, '1_detection')
+        if not os.path.exists(draw_box_file_dir):
+            os.mkdir(draw_box_file_dir)
+
+        # Directory to save the extracted small images
+        extracted_file_dir = os.path.join(save_dir, '2_extraction')
+        if not os.path.exists(extracted_file_dir):
+            os.mkdir(extracted_file_dir)
+
+        filename_w_path = os.path.join(file_dir, orig_filename)
+        orig_img = cv2.imread(filename_w_path)
+
+        # Do a subtraction with another image, which has been star-aligned
+        file_for_subtraction_w_path = os.path.join(file_dir, file_for_subtraction)
+        img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
+        img = cv2.subtract(orig_img, img_for_subtraction)
+
+        detection_lines = self.detect_meteor_from_image(img, orig_img)
+        if not (detection_lines is None):
+            self.Current_Image_Detection_Lines = detection_lines
+        else:
+            self.Current_Image_Detection_Lines = []
+
+        # Check if we are the first image.
+        # Only when we are not the first image we'll do the extraction
+        if len(self.Previous_Image_Filename) > 0:
+            # We can now extract the detection objects from the
+            # previous image, with excluding the possible satellites
+
+            # The self.Previous_Image_Detection_Lines,
+            #     self.Previous_Image_Satellites,
+            #     self.Current_Image_Satellites
+            # will be updated
+            self.check_satellite_with_previous_detection_list(verbose)
+
+            filename_no_ext, file_ext = os.path.splitext(self.Previous_Image_Filename)
+
+            previous_detection_wo_satellite = []
+            for line in self.Previous_Image_Detection_Lines:
+                if not (line in self.Previous_Image_Satellites):
+                    previous_detection_wo_satellite.append([line[0], line[1], line[2], line[3],
+                                                            line[4], line[5], line[6]])
+
+            print(self.Previous_Image_Filename)
+            print(self.Previous_Image_Detection_Lines)
+            print(self.Previous_Image_Satellites)
+            print(previous_detection_wo_satellite)
+
+            # if len(previous_detection_wo_satellite) > 0:
+            if len(self.Previous_Image_Detection_Lines) > 0:
+                draw_img = self.draw_detection_boxes_on_image(self.Previous_Image,
+                                                              previous_detection_wo_satellite,
+                                                              color=(255, 255, 0))
+
+                # Also highlight the possible satellites as well
+                draw_img = self.draw_detection_boxes_on_image(draw_img,
+                                                              self.Previous_Image_Satellites,
+                                                              color=(0, 255, 255))
+
+                draw_filename = filename_no_ext + "_detection_{}".format(len(previous_detection_wo_satellite))
+                draw_filename = draw_filename + file_ext
+
+                # draw_filename = os.path.join(file_dir, draw_filename)
+                # draw_filename = os.path.join(save_dir, draw_filename)
+                draw_filename = os.path.join(draw_box_file_dir, draw_filename)
+                cv2.imwrite(draw_filename, draw_img)
+
+                # Extract the detected portions to small image files
+                # Normally they would be 640x640 size, but can be bigger
+                self.extract_meteor_images_to_file(self.Previous_Image,
+                                                   previous_detection_wo_satellite,
+                                                   extracted_file_dir,
+                                                   self.Previous_Image_Filename,
+                                                   verbose)
+            else:
+                # No any line detected
+                # Save an image with updated file name to indicate
+                # detection is 0
+                draw_filename = filename_no_ext + "_detection_0" + file_ext
+
+                # draw_filename = os.path.join(save_dir, draw_filename)
+                draw_filename = os.path.join(draw_box_file_dir, draw_filename)
+                cv2.imwrite(draw_filename, self.Previous_Image)
+
+        # The previous file was handled and done
+        # Update the previous data to the current
+        self.Previous_Image_Detection_Lines = self.Current_Image_Detection_Lines
+        self.Previous_Image_Satellites = self.Current_Image_Satellites
+        self.Previous_Image = copy.copy(orig_img)
+        self.Previous_Image_Filename = orig_filename
+
+        self.Current_Image_Detection_Lines = []
+        self.Current_Image_Satellites = []
+
     # The "orig_filename" parameter should not have path info,
     # just the file name like "xxxx.jpg"
     #
-    '''
-    # For each image file, a sub-folder will be created in the
-    # "save_dir". The sub-folder will be named with the image
-    # file name, like "xxxxx.jpg". Folder structure would be like
-    # this:
-    #
-    # <save_dir>
-    #       -- <xxxxx.jpg>
-    #                -- extracted image files
-    #
-    '''
     # The file_dir is the original image file folder
     # In the save_dir, two sub_folders should have been created:
     #
@@ -802,6 +1081,10 @@ class MeteorDetector:
     # -- This would help if the two images have been star-aligned
     # -- Doing a subtraction would make the moving objects be very clear
     #
+    # NOTE:
+    # ==================================================================
+    # As we also need to detect satellites with two images, this function
+    # is to be deprecated !!!
     def detect_n_extract_meteor_image_file(self, file_dir, orig_filename, save_dir, verbose, file_for_subtraction=''):
         # Directory to save the image drawn with detection boxes
         draw_box_file_dir = os.path.join(save_dir, '1_detection')
@@ -809,9 +1092,9 @@ class MeteorDetector:
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extrated_file_dir = os.path.join(save_dir, '2_extraction')
-        if not os.path.exists(extrated_file_dir):
-            os.mkdir(extrated_file_dir)
+        extracted_file_dir = os.path.join(save_dir, '2_extraction')
+        if not os.path.exists(extracted_file_dir):
+            os.mkdir(extracted_file_dir)
 
         filename_w_path = os.path.join(file_dir, orig_filename)
         orig_img = cv2.imread(filename_w_path)
@@ -851,7 +1134,7 @@ class MeteorDetector:
 
             # Extract the detected portions to small image files
             # Normally they would be 640x640 size, but can be bigger
-            self.extract_meteor_images_to_file(orig_img, detection_lines, extrated_file_dir, orig_filename, verbose)
+            self.extract_meteor_images_to_file(orig_img, detection_lines, extracted_file_dir, orig_filename, verbose)
         else:
             # No line detected
             # Save an image with updated file name to indicate
@@ -903,8 +1186,14 @@ class MeteorDetector:
                 else:
                     next_image_file = image_list[index - 1]
 
-                self.detect_n_extract_meteor_image_file(file_dir, image_file, save_dir, verbose,
-                                                        file_for_subtraction=next_image_file)
+                # NOTE:
+                # This function is to be deprecated
+                # self.detect_n_extract_meteor_image_file(file_dir, image_file, save_dir, verbose,
+                #                                         file_for_subtraction=next_image_file)
+
+                self.detect_n_process_the_previous_image(file_dir, image_file, save_dir,
+                                                         file_for_subtraction=next_image_file,
+                                                         verbose=verbose)
             else:
                 # Detection without image subtraction
                 # This would be rarely used now...
