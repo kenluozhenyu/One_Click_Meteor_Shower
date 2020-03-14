@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 import os

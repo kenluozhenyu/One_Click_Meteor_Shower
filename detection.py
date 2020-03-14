@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cv2
 import numpy as np
 import copy
@@ -208,8 +209,8 @@ class MeteorDetector:
     # This is for next step to determine if these two lines are in the
     # same line
     def __get_most_close_two_points_from_two_lines_with_same_angel(self,
-                                                                   l1_x1, l1_y1, l1_x2, l1_y2,
-                                                                   l2_x1, l2_y1, l2_x2, l2_y2,
+                                                                   L1_x1, L1_y1, L1_x2, L1_y2,
+                                                                   L2_x1, L2_y1, L2_x2, L2_y2,
                                                                    angel):
         close_x1 = 0
         close_y1 = 0
@@ -217,30 +218,190 @@ class MeteorDetector:
         close_y2 = 0
 
         if angel >= 0:
-            if min(l1_x1, l1_x2) < min(l2_x1, l2_x2):
-                close_x1 = max(l1_x1, l1_x2)
-                close_y1 = max(l1_y1, l1_y2)
-                close_x2 = min(l2_x1, l2_x2)
-                close_y2 = min(l2_y1, l2_y2)
+            if min(L1_x1, L1_x2) < min(L2_x1, L2_x2):
+                close_x1 = max(L1_x1, L1_x2)
+                close_y1 = max(L1_y1, L1_y2)
+                close_x2 = min(L2_x1, L2_x2)
+                close_y2 = min(L2_y1, L2_y2)
             else:
-                close_x1 = min(l1_x1, l1_x2)
-                close_y1 = min(l1_y1, l1_y2)
-                close_x2 = max(l2_x1, l2_x2)
-                close_y2 = max(l2_y1, l2_y2)
+                close_x1 = min(L1_x1, L1_x2)
+                close_y1 = min(L1_y1, L1_y2)
+                close_x2 = max(L2_x1, L2_x2)
+                close_y2 = max(L2_y1, L2_y2)
         else:
-            if min(l1_x1, l1_x2) < min(l2_x1, l2_x2):
-                close_x1 = max(l1_x1, l1_x2)
-                close_y1 = min(l1_y1, l1_y2)
-                close_x2 = min(l2_x1, l2_x2)
-                close_y2 = max(l2_y1, l2_y2)
+            if min(L1_x1, L1_x2) < min(L2_x1, L2_x2):
+                close_x1 = max(L1_x1, L1_x2)
+                close_y1 = min(L1_y1, L1_y2)
+                close_x2 = min(L2_x1, L2_x2)
+                close_y2 = max(L2_y1, L2_y2)
             else:
-                close_x1 = min(l1_x1, l1_x2)
-                close_y1 = max(l1_y1, l1_y2)
-                close_x2 = max(l2_x1, l2_x2)
-                close_y2 = min(l2_y1, l2_y2)
+                close_x1 = min(L1_x1, L1_x2)
+                close_y1 = max(L1_y1, L1_y2)
+                close_x2 = max(L2_x1, L2_x2)
+                close_y2 = min(L2_y1, L2_y2)
 
         return close_x1, close_y1, close_x2, close_y2
 
+    # Even though we pass he angle as parameter here, we expect the
+    # angles of these two lines are already compared and are quite
+    # closed, can be considered as equal
+    def __calculate_two_parallel_lines_distance(self, L1_x_mid, L1_y_mid, L2_x_mid, L2_y_mid, angle):
+        angle_mid = math.atan2((L2_y_mid - L1_y_mid), (L2_x_mid - L1_x_mid))
+
+        # To ensure the angle range is (-pi/2, pi/2)
+        if angle_mid > np.pi / 2:
+            angle_mid = angle_mid - np.pi
+        if angle_mid < -np.pi / 2:
+            angle_mid = np.pi + angle_mid
+
+        angle_mid = abs(angle_mid)
+
+        angle_mid_to_line = abs(angle_mid - abs(angle))
+
+        dist_mid = math.sqrt((L2_x_mid - L1_x_mid) ** 2 + (L2_y_mid - L1_y_mid) ** 2)
+        vertical_dist = dist_mid * math.sin(angle_mid_to_line)
+
+        return vertical_dist
+
+    '''
+    # Don't use this. 
+    # A short line in a big photo image could cause the bias value 
+    # of the line function (y=ax + b), varies too much    
+    def __calculate_two_parallel_lines_distance(self, L1_x1, L1_y1, L1_x2, L1_y2, L2_x1, L2_y1, L2_x2, L2_y2, angle):
+        if L1_x1 == L1_x2 or L2_x1 == L2_x2:
+            # Vertical lines
+            return abs(L2_x1 - L1_x1)
+
+        if L1_y1 == L1_y2 or L1_y1 == L2_y2:
+            # Horizontal lines
+            return abs(L2_y1 - L1_y1)
+
+        bias_1 = ((L1_x2 * L1_y1) - (L1_x1 * L1_y2)) / (L1_x2 - L1_x1)
+        bias_2 = ((L2_x2 * L2_y1) - (L2_x1 * L2_y2)) / (L2_x2 - L2_x1)
+
+        dist = abs((bias_1 - bias_2) * math.cos(angle))
+        return dist
+    '''
+
+    # A. Some times one line could be recognized as two
+    #    We want to get them merged to be one
+    # B. Some times lines from two images could belong to the same satellite
+    #    We want to distinguish them
+    #
+    # Criteria:
+    #   1) Angle is almost the same
+    #   2) Vertical distance is very close
+    #   3) No overlap, like these:
+    #         --------
+    #              -------
+    #      Only accept lines like these:
+    #         -------- -----
+    #   4) The distance between the two closest points
+    #      is within threshold
+    def __decide_if_two_lines_should_belong_to_the_same_object(self,
+                                                               L1_x1, L1_y1, L1_x2, L1_y2,
+                                                               L2_x1, L2_y1, L2_x2, L2_y2,
+                                                               for_satellite=False):
+        angle_L1 = math.atan2((L1_y2 - L1_y1), (L1_x2 - L1_x1))
+
+        # To ensure the angle range is (-pi/2, pi/2)
+        if angle_L1 > np.pi / 2:
+            angle_L1 = angle_L1 - np.pi
+        if angle_L1 < -np.pi / 2:
+            angle_L1 = np.pi + angle_L1
+
+        angle_L2 = math.atan2((L2_y2 - L2_y1), (L2_x2 - L2_x1))
+        if angle_L2 > np.pi / 2:
+            angle_L2 = angle_L2 - np.pi
+        if angle_L2 < -np.pi / 2:
+            angle_L2 = np.pi + angle_L2
+
+        # Sometimes the two lines' direction is similar, but the angles
+        # are reverted, like one is -80 deg and one is +80 deg.
+        # In this case the delta should be calculated as 20 deg, not 160
+        angle_delta = abs(angle_L1 - angle_L2)
+        if angle_delta > np.pi/2:
+            angle_delta = np.pi - angle_delta
+
+        # if abs(angle_L1 - angle_L2) > settings.LINE_ANGEL_DELTA_THRESHOLD:
+        if angle_delta > settings.LINE_ANGEL_DELTA_THRESHOLD:
+            # Angle delta is too much
+            return False
+
+        L1_x_mid = int((L1_x1 + L1_x2) / 2)
+        L1_y_mid = int((L1_y1 + L1_y2) / 2)
+        L2_x_mid = int((L2_x1 + L2_x2) / 2)
+        L2_y_mid = int((L2_y1 + L2_y2) / 2)
+
+        angle_avg = (angle_L1 + angle_L2) / 2
+        # vertical_dist = self.__calculate_two_parallel_lines_distance(L1_x1, L1_y1, L1_x2, L1_y2,
+        #                                                              L2_x1, L2_y1, L2_x2, L2_y2,
+        #                                                              angle_avg)
+        vertical_dist = self.__calculate_two_parallel_lines_distance(L1_x_mid, L1_y_mid, L2_x_mid, L2_y_mid, angle_avg)
+
+        if not for_satellite:
+            # Check lines in the same image
+            if vertical_dist > settings.LINE_VERTICAL_DISTANCE_FOR_MERGE_THRESHOLD:
+                # Can only be considered as two parallel lines
+                # Not to merge
+                return False
+        else:
+            # Check line in different images for satellite detection
+            if vertical_dist > settings.LINE_VERTICAL_DISTANCE_FOR_SATELLITE_THRESHOLD:
+                # Can only be considered as two parallel lines
+                # Not to merge
+                return False
+
+        # Checking for overlap
+        b_overlap = False
+        if min(L1_y1, L1_y2) < min(L2_y1, L2_y2):
+            if max(L1_y2, L1_y2) > min(L2_y1, L2_y2):
+                # return False
+                b_overlap = True
+
+        if min(L1_y1, L1_y2) > min(L2_y1, L2_y2):
+            if min(L1_y1, L1_y2) < max(L2_y1, L2_y2):
+                # return False
+                b_overlap = True
+
+        if min(L1_x1, L1_x2) < min(L2_x1, L2_x2):
+            if max(L1_x1, L1_x2) > min(L2_x1, L2_x2):
+                # return False
+                b_overlap = True
+
+        if min(L1_x1, L1_x2) > min(L2_x1, L2_x2):
+            if min(L1_x1, L1_x2) < max(L2_x1, L2_x2):
+                # return False
+                b_overlap = True
+
+        # If there's overlap, but are very close, merge them as well
+        # In this case we don't need to calculate the closest two points
+        # Just return true to merge them
+        if b_overlap and vertical_dist <= settings.LINE_VERTICAL_DISTANCE_FOR_MERGE_W_OVERLAP_THRESHOLD:
+            return True
+
+        # Finally, check the most close two points
+        close_x1, close_y1, close_x2, close_y2 = \
+            self.__get_most_close_two_points_from_two_lines_with_same_angel(L1_x1, L1_y1, L1_x2, L1_y2,
+                                                                            L2_x1, L2_y1, L2_x2, L2_y2,
+                                                                            angle_avg)
+        dist_close = math.sqrt((close_x2 - close_x1) ** 2 + (close_y2 - close_y1) ** 2)
+
+        if not for_satellite:
+            if dist_close > settings.LINE_DISTANCE_FOR_MERGE_THRESHOLD:
+                return False
+        else:
+            if dist_close > settings.LINE_DISTANCE_FOR_SATELLITE_THRESHOLD:
+                return False
+
+        # All checking passed
+        return True
+
+    # The initial detection lines need some filtering/processing:
+    # 1) There would be some false detection due to the original
+    #    image border, with image rotated by star-alignment
+    # 2) Some lines could be detected as two, or more. Try to
+    #    merge them back to one
     def detection_lines_filtering(self, detection_lines, orig_image):
         filtered_false_detection = []
 
@@ -258,15 +419,6 @@ class MeteorDetector:
 
             # cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
-            '''
-            cv2.putText(img, '{}'.format(i),
-                        (x1, y1),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale=1,
-                        fontColor = (255,255,255),
-                        lineType=1)
-
-            '''
             # In some cases the image border could cause some
             # false detection. Remove these
             if abs(x1 - x2) < settings.LINE_X_OR_Y_DELTA_THRESHOLD:
@@ -387,119 +539,64 @@ class MeteorDetector:
             for j in range(i + 1, len(filtered_false_detection)):
                 angle_2 = filtered_false_detection[j][6]
 
-                if abs(angle_1 - angle_2) <= settings.LINE_ANGEL_DELTA_THRESHOLD:
-                    # Get the most closed two points
-                    i_x1 = filtered_false_detection[i][0]
-                    i_y1 = filtered_false_detection[i][1]
-                    i_x2 = filtered_false_detection[i][2]
-                    i_y2 = filtered_false_detection[i][3]
+                if angle_2 == -3.14:
+                    continue
 
-                    j_x1 = filtered_false_detection[j][0]
-                    j_y1 = filtered_false_detection[j][1]
-                    j_x2 = filtered_false_detection[j][2]
-                    j_y2 = filtered_false_detection[j][3]
+                i_x1 = filtered_false_detection[i][0]
+                i_y1 = filtered_false_detection[i][1]
+                i_x2 = filtered_false_detection[i][2]
+                i_y2 = filtered_false_detection[i][3]
 
-                    '''
-                    close_x1 = 0
-                    close_y1 = 0
-                    close_x2 = 0
-                    close_y2 = 0
-                    
+                j_x1 = filtered_false_detection[j][0]
+                j_y1 = filtered_false_detection[j][1]
+                j_x2 = filtered_false_detection[j][2]
+                j_y2 = filtered_false_detection[j][3]
+
+                if self.__decide_if_two_lines_should_belong_to_the_same_object(i_x1, i_y1, i_x2, i_y2,
+                                                                               j_x1, j_y1, j_x2, j_y2,
+                                                                               for_satellite=False):
+                    merged_x1 = 0
+                    merged_y1 = 0
+                    merged_x2 = 0
+                    merged_y2 = 0
+
                     if angle_1 >= 0:
-                        if min(i_x1, i_x2) < min(j_x1, j_x2):
-                            close_x1 = max(i_x1, i_x2)
-                            close_y1 = max(i_y1, i_y2)
-                            close_x2 = min(j_x1, j_x2)
-                            close_y2 = min(j_y1, j_y2)
-                        else:
-                            close_x1 = min(i_x1, i_x2)
-                            close_y1 = min(i_y1, i_y2)
-                            close_x2 = max(j_x1, j_x2)
-                            close_y2 = max(j_y1, j_y2)
+                        merged_x1 = min(i_x1, i_x2, j_x1, j_x2)
+                        merged_y1 = min(i_y1, i_y2, j_y1, j_y2)
+                        merged_x2 = max(i_x1, i_x2, j_x1, j_x2)
+                        merged_y2 = max(i_y1, i_y2, j_y1, j_y2)
                     else:
-                        if min(i_x1, i_x2) < min(j_x1, j_x2):
-                            close_x1 = max(i_x1, i_x2)
-                            close_y1 = min(i_y1, i_y2)
-                            close_x2 = min(j_x1, j_x2)
-                            close_y2 = max(j_y1, j_y2)
-                        else:
-                            close_x1 = min(i_x1, i_x2)
-                            close_y1 = max(i_y1, i_y2)
-                            close_x2 = max(j_x1, j_x2)
-                            close_y2 = min(j_y1, j_y2)
-                    '''
+                        merged_x1 = min(i_x1, i_x2, j_x1, j_x2)
+                        merged_y1 = max(i_y1, i_y2, j_y1, j_y2)
+                        merged_x2 = max(i_x1, i_x2, j_x1, j_x2)
+                        merged_y2 = min(i_y1, i_y2, j_y1, j_y2)
 
-                    close_x1, close_y1, close_x2, close_y2 = \
-                        self.__get_most_close_two_points_from_two_lines_with_same_angel(i_x1, i_y1, i_x2, i_y2,
-                                                                                        j_x1, j_y1, j_x2, j_y2,
-                                                                                        angle_1)
+                        # merged_detection.append([merged_x1, merged_y1, merged_x2, merged_y2, angle_1])
 
-                    angle_close = math.atan2((close_y2 - close_y1), (close_x2 - close_x1))
-                    if angle_close > np.pi / 2:
-                        angle_close = angle_close - np.pi
-                    if angle_close < -np.pi / 2:
-                        angle_close = np.pi + angle_close
+                        # The merged line to be updated to filtered_false_detection[i]
+                        # And filtered_false_detection[j] is removed
 
-                    dist_close = math.sqrt((close_x2 - close_x1) ** 2 + (close_y2 - close_y1) ** 2)
+                    new_angel = (angle_1 + angle_2) / 2
 
-                    # dist_1 = math.sqrt((i_x1 - j_x1) ** 2 + (i_y1 - j_y1) ** 2)
-                    # dist_2 = math.sqrt((i_x1 - j_x2) ** 2 + (i_y1 - j_y2) ** 2)
-                    # dist_3 = math.sqrt((i_x2 - j_x1) ** 2 + (i_y2 - j_y1) ** 2)
-                    # dist_4 = math.sqrt((i_x2 - j_x2) ** 2 + (i_y2 - j_y2) ** 2)
+                    x_mid_merged = int((merged_x1 + merged_x2) / 2)
+                    y_mid_merged = int((merged_y1 + merged_y2) / 2)
 
-                    # dist_min = min([dist_1, dist_2, dist_3, dist_4])
+                    filtered_false_detection[i][0] = merged_x1
+                    filtered_false_detection[i][1] = merged_y1
+                    filtered_false_detection[i][2] = merged_x2
+                    filtered_false_detection[i][3] = merged_y2
+                    filtered_false_detection[i][4] = x_mid_merged
+                    filtered_false_detection[i][5] = y_mid_merged
+                    filtered_false_detection[i][6] = new_angel
 
-                    if abs(angle_close - ((angle_1 + angle_2) / 2)) <= settings.LINE_ANGEL_DELTA_THRESHOLD:
-                        if dist_close <= settings.LINE_DISTANCE_FOR_MERGE_THRESHOLD:
-                            # These two lines are
-                            # 1) closed enough
-                            # 2) have the same angle
-                            # 3) the connection lines also have the same angle
-                            #
-                            # Can be considered as one line
-
-                            merged_x1 = 0
-                            merged_y1 = 0
-                            merged_x2 = 0
-                            merged_y2 = 0
-
-                            if angle_1 >= 0:
-                                merged_x1 = min(i_x1, i_x2, j_x1, j_x2)
-                                merged_y1 = min(i_y1, i_y2, j_y1, j_y2)
-                                merged_x2 = max(i_x1, i_x2, j_x1, j_x2)
-                                merged_y2 = max(i_y1, i_y2, j_y1, j_y2)
-                            else:
-                                merged_x1 = min(i_x1, i_x2, j_x1, j_x2)
-                                merged_y1 = max(i_y1, i_y2, j_y1, j_y2)
-                                merged_x2 = max(i_x1, i_x2, j_x1, j_x2)
-                                merged_y2 = min(i_y1, i_y2, j_y1, j_y2)
-
-                            # merged_detection.append([merged_x1, merged_y1, merged_x2, merged_y2, angle_1])
-
-                            # The merged line to be updated to filtered_false_detection[i]
-                            # And filtered_false_detection[j] is removed
-
-                            new_angel = (angle_1 + angle_2) / 2
-
-                            x_mid_merged = int((merged_x1 + merged_x2) / 2)
-                            y_mid_merged = int((merged_y1 + merged_y2) / 2)
-
-                            filtered_false_detection[i][0] = merged_x1
-                            filtered_false_detection[i][1] = merged_y1
-                            filtered_false_detection[i][2] = merged_x2
-                            filtered_false_detection[i][3] = merged_y2
-                            filtered_false_detection[i][4] = x_mid_merged
-                            filtered_false_detection[i][5] = y_mid_merged
-                            filtered_false_detection[i][6] = new_angel
-
-                            filtered_false_detection[j][0] = 0
-                            filtered_false_detection[j][1] = 0
-                            filtered_false_detection[j][2] = 0
-                            filtered_false_detection[j][3] = 0
-                            filtered_false_detection[j][4] = 0
-                            filtered_false_detection[j][5] = 0
-                            # Use such an angle to indicate this is removed
-                            filtered_false_detection[j][6] = -3.14
+                    filtered_false_detection[j][0] = 0
+                    filtered_false_detection[j][1] = 0
+                    filtered_false_detection[j][2] = 0
+                    filtered_false_detection[j][3] = 0
+                    filtered_false_detection[j][4] = 0
+                    filtered_false_detection[j][5] = 0
+                    # Use such an angle to indicate this is removed
+                    filtered_false_detection[j][6] = -3.14
 
             # End of the j for loop
             # One entry in the i for loop has completely matched with others
@@ -515,7 +612,7 @@ class MeteorDetector:
 
     # Get the two points coordinators for a square that can hold
     # the detected meteor image
-    def get_box_coordinate_from_meteor_line(self, x1, y1, x2, y2, img_width, img_height, factor=1):
+    def get_box_coordinate_from_detected_line(self, x1, y1, x2, y2, img_width, img_height, factor=1):
 
         sample_width = abs(x2 - x1)
         sample_height = abs(y2 - y1)
@@ -592,7 +689,7 @@ class MeteorDetector:
 
         return box_list
 
-    def get_combined_box_list_from_meteor_lines(self, detection_lines, img_width, img_height):
+    def get_combined_box_list_from_detected_lines(self, detection_lines, img_width, img_height):
         # Step 1: Get the box list for each line
         # Step 2: If two boxes have overlap, combine them (enlarged)
 
@@ -606,8 +703,8 @@ class MeteorDetector:
 
             # cv2.line(draw_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
             box_x1, box_y1, box_x2, box_y2 = \
-                self.get_box_coordinate_from_meteor_line(x1, y1, x2, y2, img_width, img_height,
-                                                         factor=settings.DETECTION_CROP_IMAGE_BOX_FACTOR)
+                self.get_box_coordinate_from_detected_line(x1, y1, x2, y2, img_width, img_height,
+                                                           factor=settings.DETECTION_CROP_IMAGE_BOX_FACTOR)
 
             # The "True" value in the end is for next step usage
             # When two boxes are merged, tag one as False, indicating
@@ -676,13 +773,13 @@ class MeteorDetector:
                     #
                     # merged_width = max(abs(merged_x2 - merged_x1), abs(merged_y2 - merged_y1))
                     merged_x1, merged_y1, merged_x2, merged_y2 = \
-                        self.get_box_coordinate_from_meteor_line(merged_x1,
-                                                                 merged_y1,
-                                                                 merged_x2,
-                                                                 merged_y2,
-                                                                 img_width,
-                                                                 img_height,
-                                                                 factor=1)
+                        self.get_box_coordinate_from_detected_line(merged_x1,
+                                                                   merged_y1,
+                                                                   merged_x2,
+                                                                   merged_y2,
+                                                                   img_width,
+                                                                   img_height,
+                                                                   factor=1)
 
                     box_list[i][0] = merged_x1
                     box_list[i][1] = merged_y1
@@ -755,36 +852,8 @@ class MeteorDetector:
             merged_lines = my_HoughBundler.process_lines(lines=lines)
 
             # Remove some false detection.
-            # Those lines at the image edge, and in parallel with
-            # the edge, are to be considered as false detection
-
-            '''
-            real_lines = []
-            height, width, channels = original_img.shape
-            for line in merged_lines:
-                x1 = line[0][0]
-                y1 = line[0][1]
-                x2 = line[1][0]
-                y2 = line[1][1]
-
-                if abs(x1 == x2) < settings.DETECTION_LINE_X_OR_Y_DELTA_THRESHOLD \
-                        and (max(x1, x2) <= settings.DETECTION_IMAGE_BORDER_THRESHOLD
-                             or min(x1, x2) >= width - settings.DETECTION_IMAGE_BORDER_THRESHOLD):
-                    # ignore this line, should be border
-                    continue
-
-                if abs(y1 == y2) < settings.DETECTION_LINE_X_OR_Y_DELTA_THRESHOLD \
-                        and (max(y1, y2) <= settings.DETECTION_IMAGE_BORDER_THRESHOLD
-                             or min(y1, y2) >= height - settings.DETECTION_IMAGE_BORDER_THRESHOLD):
-                    # ignore this line, should be border
-                    continue
-
-                real_lines.append(line)
-            
-            return real_lines
-            '''
-
-            # Use the original image for further filtering
+            # And merging some lines which could belong to be same one.
+            # The original image is needed (for some color detection)
             filtered_lines = self.detection_lines_filtering(merged_lines, original_img)
             return filtered_lines
         else:
@@ -798,7 +867,7 @@ class MeteorDetector:
         height, width, channels = draw_img.shape
 
         # box_list = self.get_box_list_from_meteor_lines(detection_lines, width, height)
-        box_list = self.get_combined_box_list_from_meteor_lines(detection_lines, width, height)
+        box_list = self.get_combined_box_list_from_detected_lines(detection_lines, width, height)
         # print(box_list)
 
         for line in detection_lines:
@@ -860,7 +929,7 @@ class MeteorDetector:
         height, width, channels = original_img.shape
 
         # box_list = self.get_box_list_from_meteor_lines(detection_lines, width, height)
-        box_list = self.get_combined_box_list_from_meteor_lines(detection_lines, width, height)
+        box_list = self.get_combined_box_list_from_detected_lines(detection_lines, width, height)
         i = 0
 
         # filename_no_ext = os.path.splitext(orig_filename)[0]
@@ -889,6 +958,7 @@ class MeteorDetector:
                 print("    saving {} ...".format(file_to_save))
 
             cv2.imwrite(file_to_save, crop_img)
+        # End of function
 
     # Logic:
     # 1) For each element in the self.Previous_Image_Detection_List,
@@ -903,6 +973,8 @@ class MeteorDetector:
             p_y1 = previous_line[1]
             p_x2 = previous_line[2]
             p_y2 = previous_line[3]
+            p_x_mid = previous_line[4]
+            p_y_mid = previous_line[5]
             p_angle = previous_line[6]
 
             for current_line in self.Current_Image_Detection_Lines:
@@ -910,49 +982,16 @@ class MeteorDetector:
                 c_y1 = current_line[1]
                 c_x2 = current_line[2]
                 c_y2 = current_line[3]
+                c_x_mid = current_line[4]
+                c_y_mid = current_line[5]
                 c_angle = current_line[6]
 
-                if abs(p_angle - c_angle) <= settings.LINE_ANGEL_DELTA_THRESHOLD:
-
-                    close_x1, close_y1, close_x2, close_y2 = \
-                        self.__get_most_close_two_points_from_two_lines_with_same_angel(p_x1, p_y1, p_x2, p_y2,
-                                                                                        c_x1, c_y1, c_x2, c_y2,
-                                                                                        p_angle)
-
-                    '''
-                    angle_close = math.atan2((close_y2 - close_y1), (close_x2 - close_x1))
-                    if angle_close > np.pi / 2:
-                        angle_close = angle_close - np.pi
-                    if angle_close < -np.pi / 2:
-                        angle_close = np.pi + angle_close
-                    '''
-
-                    dist_close = math.sqrt((close_x2 - close_x1) ** 2 + (close_y2 - close_y1) ** 2)
-
-                    '''
-                    # Don't use abs(angle_close - p_angle) + abs(angle_close - c_angle) at this point
-                    # To avoid the delta is too much
-                    if abs((angle_close - p_angle + angle_close - c_angle)/2) \
-                            <= settings.LINE_JOINT_ANGEL_DELTA_THRESHOLD \
-                            or dist_close <= 12:
-                    '''
-                    p_x_mid = previous_line[4]
-                    p_y_mid = previous_line[5]
-                    c_x_mid = current_line[4]
-                    c_y_mid = current_line[5]
-
-                    angel_mid = math.atan2((c_y_mid - p_y_mid), (c_x_mid - p_x_mid))
-                    if angel_mid > np.pi / 2:
-                        angel_mid = angel_mid - np.pi
-                    if angel_mid < -np.pi / 2:
-                        angel_mid = np.pi + angel_mid
-
-                    if abs(angel_mid - p_angle)/2 + abs(angel_mid - c_angle)/2 \
-                            <= settings.LINE_JOINT_ANGEL_DELTA_THRESHOLD \
-                            and dist_close <= settings.LINE_DISTANCE_FOR_SATELLITE_THRESHOLD:
-                        # Ok we can consider these as due to the same satellite
-                        self.Previous_Image_Satellites.append([p_x1, p_y1, p_x2, p_y2, p_x_mid, p_y_mid, p_angle])
-                        self.Current_Image_Satellites.append([c_x1, c_y1, c_x2, c_y2, c_x_mid, c_y_mid, c_angle])
+                if self.__decide_if_two_lines_should_belong_to_the_same_object(p_x1, p_y1, p_x2, p_y2,
+                                                                               c_x1, c_y1, c_x2, c_y2,
+                                                                               for_satellite=True):
+                    # Ok we can consider these as due to the same satellite
+                    self.Previous_Image_Satellites.append([p_x1, p_y1, p_x2, p_y2, p_x_mid, p_y_mid, p_angle])
+                    self.Current_Image_Satellites.append([c_x1, c_y1, c_x2, c_y2, c_x_mid, c_y_mid, c_angle])
 
             # end of the for current_line loop
         # end of the for previous_line loop
@@ -960,6 +999,7 @@ class MeteorDetector:
         if verbose:
             print('... {} detected {} satellites'.format(self.Previous_Image_Filename,
                                                          len(self.Previous_Image_Satellites)))
+        # End of function
 
     # Logic:
     # 1) Detect the lines from current image (orig_filename)
@@ -976,7 +1016,7 @@ class MeteorDetector:
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extracted_file_dir = os.path.join(save_dir, '2_extraction')
+        extracted_file_dir = os.path.join(save_dir, '2_cropped')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
@@ -1064,6 +1104,7 @@ class MeteorDetector:
 
         self.Current_Image_Detection_Lines = []
         self.Current_Image_Satellites = []
+    # End of function
 
     # The "orig_filename" parameter should not have path info,
     # just the file name like "xxxx.jpg"
@@ -1092,7 +1133,7 @@ class MeteorDetector:
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extracted_file_dir = os.path.join(save_dir, '2_extraction')
+        extracted_file_dir = os.path.join(save_dir, '2_cropped')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
@@ -1110,7 +1151,7 @@ class MeteorDetector:
 
         # The subtracted image is purely used for line detection
         # The original image is still used for further filtering
-        detection_lines = self.detect_meteor_from_image(img, orig_img)
+        detection_lines = self.detect_meteor_from_image(img, orig_img, color=(255, 255, 0))
         if not (detection_lines is None):
             # print(detection_lines)
 
@@ -1164,7 +1205,7 @@ class MeteorDetector:
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extracted_file_dir = os.path.join(save_dir, '2_extraction')
+        extracted_file_dir = os.path.join(save_dir, '2_cropped')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 

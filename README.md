@@ -22,23 +22,30 @@ Initially I had tried to use Deep learning technique for image object detection.
 
 So I turned to use OpenCV as the figure of the meteor image is closed to a line.
 The logic is:
- - Blur -> Canny -> HoughLinesP
+ - Two images subtraction -> Blur -> Canny -> HoughLinesP
+
+(Thanks for the suggestion from ### [LoveDaisy](https://github.com/LoveDaisy))
 
 The corresponding parameters are tuned with the full size images from Canon 5D III and Canon 6D.
 
-It works on a certain level however in my test result it shows some problems:
- 1. **Missing detection**. Dim meteors, short meteors, or meteors closed to the Milkyway, are difficult to be detected. If adjusting the parameters too aggressive the stars/Milkyway will be too much for detecting a line within them.
- 2. **False detection**. Planes, maybe satellites (but lucky they are dim), landscape objects could also be recognized as a line. The most critical problem is that if the photo image is rotated for some degrees for star-alignment propose, the original edge would show some line characters and would be detected as well.
+Detecting lines is not enough. Planes, maybe satellites, landscape objects could also be recognized as a line.
 
-But I have to use this method first...
+To try to recognize the satellite/plane objects, the algorithm is to compare two continuous images to look for lines with similar angle and distance (*the distance parameter would need further adjustment for different lens view* -- **TO DO #1**).
 
-For "Missing detection", a solution is to try to introduce a tool to allow manually select the meteor object position and record it. -- **TO DO #1**
+For landscape objects I have no way at this point, unless if I want to go for training an image recognition Neural Network.
 
-One more thing is to provide a tool to help to adjust the parameters. User can do some tuning according to their image.
+In the test result I can detect quite a lot of satellites. But still there would be some left.
 
-For "False detection", two alternatives:
- - Train a Neural Network for image classification (this seems can work) -- **TO DO #2**
- - Change to "two-clicks". After finish the meteor detection process, stop and manually remove those false object files, and then resume -- scripts provided and use this at present
+And for some very short meteors they could be missed in the detection.
+
+Anyway I think the result is still acceptable.
+
+For the"false detection", unrecognized satellites and landscape objects, the current alternative is to change to "two-clicks":
+
+ 1. Do the meteor detection process, stop and manually remove those false object files
+ 2. Resume with he 2nd script to extract the meteor objects
+
+*(Scripts provided)*
 
 ## Meteor image mask generation
 
@@ -48,24 +55,28 @@ A U-NET Neural Network (learned from https://github.com/zhixuhao/unet) was train
 
 Due to my GPU limitation I can only train the network with 256x256 gray image samples. The generated mask files will be resized back. But need to further check if that's good enough.
 
+Now an known problem is that the training set didn't include meteor close to the Milkyway center position. The generated mask could have some problem -- **TO DO #2**
+
 ## Meteor image extraction
 
-When the mask generated and resized/extended back to the original photo size, ImageChops.multiply() is used to extract the meteor object from the original photo with the mask. The extracted file is saved in PNG format with transparent background. This process is relatively slow in the algorithm I am using.
+ImageChops.multiply() is used to extract the meteor object from the original photo with the mask. The extracted file is saved in PNG format with transparent background.
 
 Finally the extracted meteor files can be combined to one.
 
 ![enter image description here](images/final.jpg)
 (I manually added a black background for that)
 
+And here's a composition with a star background (I intentionally increased the brightness of the combined meteors for visible propose here)
+![enter image description here](images/two-click_meteor_shower_demo2_800.jpg)
+
 **Known issue:**
-(Fixed in 2020-03-01 update)
-The border of the extracted meteor is too deep. Still need to adjust the algorithm -- **TO DO #3 (done)**
+**(Fixed in 2020-03-01 update)**
+The border of the extracted meteor could be too deep. Still need to adjust the algorithm -- **TO DO #3 (done)**
 ![enter image description here](images/final-detail.jpg)
 
 ## Suggestion to users
 
  1. When taking the photos, use equatorial mount for tracking as possible. Reduce the chance of needing to do star-alignment in post-processing
- 2. Reduce the exposure time to make the background star/Milkyway to be dimmer. The background image can be taken separately
- 3. Use the "two-clicks" scripts at this point
+ 2. Use the "two-clicks" scripts at this point
 
-**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**
+**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt** 
