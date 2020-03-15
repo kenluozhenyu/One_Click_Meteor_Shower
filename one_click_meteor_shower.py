@@ -34,7 +34,7 @@ if __name__ == "__main__":
     FINAL_dir = os.path.join(process_dir, '7_FINAL')
     FINAL_combined_dir = os.path.join(process_dir, '8_FINAL_combined')
 
-    # meteor_detector.detect_n_extract_meteor_from_folder(original_dir, process_dir, verbose=1)
+    meteor_detector.detect_n_extract_meteor_from_folder(original_dir, process_dir, verbose=1)
 
     my_gen_mask.convert_image_folder_to_gray_256(extracted_dir, gray_256_dir)
     my_gen_mask.gen_meteor_mask_from_folder(gray_256_dir, mask_256_dir)

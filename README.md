@@ -79,4 +79,4 @@ The border of the extracted meteor could be too deep. Still need to adjust the a
  1. When taking the photos, use equatorial mount for tracking as possible. Reduce the chance of needing to do star-alignment in post-processing
  2. Use the "two-clicks" scripts at this point
 
-**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt** 
+**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**

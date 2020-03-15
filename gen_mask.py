@@ -483,7 +483,7 @@ class Gen_mask:
             file_to_save = filename_no_ext + file_ext
             file_to_save = os.path.join(save_dir, file_to_save)
 
-            cv2.imwrite(file_to_save, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            cv2.imwrite(file_to_save, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 3])
 
     def combine_meteor_images_to_one(self, meteor_dir, save_dir, verbose):
         print("\nCombining the meteor images to one ...")

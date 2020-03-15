@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import copy
 import math
-import os, fnmatch
+import os
 
 import settings
 
