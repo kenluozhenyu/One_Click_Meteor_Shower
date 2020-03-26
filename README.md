@@ -1,3 +1,4 @@
+
 # One-click Meteor Shower!
 Ok. One-click is the slogan, and the ultimate target. We are moving to that but yet...
 
@@ -56,6 +57,7 @@ A U-NET Neural Network (learned from https://github.com/zhixuhao/unet) was train
 Due to my GPU limitation I can only train the network with 256x256 gray image samples. The generated mask files will be resized back. But need to further check if that's good enough.
 
 Now an known problem is that the training set didn't include meteor close to the Milkyway center position. The generated mask could have some problem -- **TO DO #2**
+*(2020-3-26: Should have some improvement with the latest trained network weight file. But still need continue to improve)*
 
 ## Meteor image extraction
 
@@ -76,7 +78,8 @@ The border of the extracted meteor could be too deep. Still need to adjust the a
 
 ## Suggestion to users
 
- 1. When taking the photos, use equatorial mount for tracking as possible. Reduce the chance of needing to do star-alignment in post-processing
- 2. Use the "two-clicks" scripts at this point
+ 1. First, use another software to do a star-alignment to the original images
+ 2. Put the aligned images to one folder
+ 3. Use the "two-clicks" scripts at this point. Also you can use the "auto_meteor_shower" script with option "detection"  for the first step, and then with option "extraction" for the 2nd step.
 
 **The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**

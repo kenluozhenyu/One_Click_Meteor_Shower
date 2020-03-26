@@ -7,7 +7,7 @@ import gen_mask
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if len(argv) < 2:
-        print("Usage: one_click_meteor_shower.py <option> <folder name>")
+        print("\nUsage: auto_meteor_shower <option> <folder name>")
         print("option: all (Do for both detection and extraction)")
         print("        detection  (This is the step 1. Detection only)")
         print("        extraction (This is the step 2. Extraction only)")
@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     do_option = argv[0]
     if do_option != "all" and do_option != "detection" and do_option != "extraction":
-        print("Usage: one_click_meteor_shower.py <option> <folder name>")
+        print("\nUsage: auto_meteor_shower <option> <folder name>")
         print("option: all (Do for both detection and extraction)")
         print("        detection  (This is the step 1. Detection only)")
         print("        extraction (This is the step 2. Extraction only)")
@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     original_dir = argv[1]
     if not os.path.exists(original_dir):
-        print("No such directory: {}".format(original_dir))
+        print("\nNo such directory: {}".format(original_dir))
         sys.exit(1)
 
     meteor_detector = detection.MeteorDetector()
