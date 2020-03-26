@@ -1,4 +1,3 @@
-
 # One-click Meteor Shower!
 Ok. One-click is the slogan, and the ultimate target. We are moving to that but yet...
 
@@ -66,10 +65,13 @@ ImageChops.multiply() is used to extract the meteor object from the original pho
 Finally the extracted meteor files can be combined to one.
 
 ![enter image description here](images/final.jpg)
+
 (I manually added a black background for that)
 
-And here's a composition with a star background (I intentionally increased the brightness of the combined meteors for visible propose here)
+And here's a composition with a star background
 ![enter image description here](images/two-click_meteor_shower_demo2_800.jpg)
+
+(I intentionally increased the brightness of the combined meteors for visible propose here)
 
 **Known issue:**
 **(Fixed in 2020-03-01 update)**
@@ -81,5 +83,11 @@ The border of the extracted meteor could be too deep. Still need to adjust the a
  1. First, use another software to do a star-alignment to the original images
  2. Put the aligned images to one folder
  3. Use the "two-clicks" scripts at this point. Also you can use the "auto_meteor_shower" script with option "detection"  for the first step, and then with option "extraction" for the 2nd step.
+
+Run step example:
+ - Step 1: auto_meteor_shower.py **detection** "folder name"
+ - Step 2: Go to the "processed/2_cropped" folder, double check the detected images. Delete those you don't think are meteor objects
+ - Step 3: auto_meteor_shower.py **extraction** "folder name"
+
 
 **The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**
