@@ -1,3 +1,4 @@
+
 # One-click Meteor Shower!
 Ok. One-click is the slogan, and the ultimate target. We are moving to that but yet...
 
@@ -87,7 +88,7 @@ The border of the extracted meteor could be too deep. Still need to adjust the a
 Run step example:
  - Step 1: auto_meteor_shower.py **detection** "folder name"
  - Step 2: Go to the "processed/2_cropped" folder, double check the detected images. Delete those you don't think are meteor objects
- - Step 3: auto_meteor_shower.py **extraction** "folder name"
+ - Step 3: auto_meteor_shower.py **extraction** "folder name" *(the folder name here is the same as that used in step 1)*
 
 
 **The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**

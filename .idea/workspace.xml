@@ -53,7 +53,7 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="646">
-              <caret line="92" column="129" selection-start-line="92" selection-start-column="129" selection-end-line="92" selection-end-column="129" />
+              <caret line="93" column="129" selection-start-line="93" selection-start-column="129" selection-end-line="93" selection-end-column="129" />
             </state>
           </provider>
         </entry>
@@ -157,7 +157,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="157" />
     <option name="y" value="-4" />
     <option name="width" value="2155" />
@@ -749,7 +749,7 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
-          <caret line="92" column="129" selection-start-line="92" selection-start-column="129" selection-end-line="92" selection-end-column="129" />
+          <caret line="93" column="129" selection-start-line="93" selection-start-column="129" selection-end-line="93" selection-end-column="129" />
         </state>
       </provider>
     </entry>
