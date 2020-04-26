@@ -1,6 +1,6 @@
 1. Get the .hdf5 file from below link:
 
-https://pan.baidu.com/s/1dYf5TpAjCYCvs_YBYKjVEQ
-code: mspz
+https://pan.baidu.com/s/1nepclLjl_OiD2iW0oFDTMA
+code: v06s
 
 2. Put the .hdf5 file to the "saved_model" folder

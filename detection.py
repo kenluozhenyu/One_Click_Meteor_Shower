@@ -631,8 +631,12 @@ class MeteorDetector:
         # The size can be at least 640 x 640
         # If the detected line size exceeds 640 pixels, the
         # draw box size can be enlarged accordingly
-        draw_size = max(sample_width, sample_height)
-        draw_size = max(draw_size, settings.DETECTION_CROP_IMAGE_BOX_SIZE)
+        draw_size = max(sample_width, sample_height, settings.DETECTION_CROP_IMAGE_BOX_SIZE)
+        # draw_size = max(draw_size, settings.DETECTION_CROP_IMAGE_BOX_SIZE)
+
+        # And it should not exceed the image size
+        # This is for some exceptional cases
+        draw_size = min(draw_size, img_width-1, img_height-1)
 
         draw_x1 = x_midpoint - int(draw_size / 2)
         draw_x2 = x_midpoint + int(draw_size / 2)
@@ -648,14 +652,13 @@ class MeteorDetector:
             draw_y2 = draw_y1 + draw_size
 
         # Detect if exceed the img size, or smaller than 0
-        # Here we didn't consider the exceptional case that
-        # the draw box size exceeds the image size
         if draw_x1 < 0:
             draw_x2 = draw_x2 - draw_x1
             draw_x1 = 0
 
         if draw_x2 > img_width - 1:
-            draw_x1 = draw_x1 - (draw_x2 - img_width + 1)
+            draw_x1 = max(0, draw_x1 - (draw_x2 - img_width + 1))
+            # draw_x1 = draw_x1 - (draw_x2 - img_width + 1)
             draw_x2 = img_width - 1
 
         if draw_y1 < 0:
@@ -663,31 +666,11 @@ class MeteorDetector:
             draw_y1 = 0
 
         if draw_y2 > img_height - 1:
-            draw_y1 = draw_y1 - (draw_y2 - img_height + 1)
+            draw_y1 = max(0, draw_y1 - (draw_y2 - img_height + 1))
+            # draw_y1 = draw_y1 - (draw_y2 - img_height + 1)
             draw_y2 = img_height - 1
 
         return draw_x1, draw_y1, draw_x2, draw_y2
-
-    # NOTE:
-    # ==================================================================
-    # As we also need to merge some boxes which have overlap, this
-    # function is to be deprecated !!!
-    def get_box_list_from_meteor_lines(self, detection_lines, img_width, img_height):
-        box_list = []
-
-        for line in detection_lines:
-            x1 = line[0][0]
-            y1 = line[0][1]
-            x2 = line[1][0]
-            y2 = line[1][1]
-
-            # cv2.line(draw_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
-            box_x1, box_y1, box_x2, box_y2 = \
-                self.get_box_coordinate_from_meteor_line(x1, y1, x2, y2, img_width, img_height)
-
-            box_list.append([box_x1, box_y1, box_x2, box_y2])
-
-        return box_list
 
     def get_combined_box_list_from_detected_lines(self, detection_lines, img_width, img_height):
         # Step 1: Get the box list for each line
@@ -1011,12 +994,12 @@ class MeteorDetector:
     # 4) Extract the detection objects from the previous image
     def detect_n_process_the_previous_image(self, file_dir, orig_filename, save_dir, file_for_subtraction, verbose):
         # Directory to save the image drawn with detection boxes
-        draw_box_file_dir = os.path.join(save_dir, '1_detection')
+        draw_box_file_dir = os.path.join(save_dir, '01_detection')
         if not os.path.exists(draw_box_file_dir):
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extracted_file_dir = os.path.join(save_dir, '2_cropped')
+        extracted_file_dir = os.path.join(save_dir, '02_cropped')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
@@ -1054,10 +1037,10 @@ class MeteorDetector:
                     previous_detection_wo_satellite.append([line[0], line[1], line[2], line[3],
                                                             line[4], line[5], line[6]])
 
-            print(self.Previous_Image_Filename)
-            print(self.Previous_Image_Detection_Lines)
-            print(self.Previous_Image_Satellites)
-            print(previous_detection_wo_satellite)
+            # print(self.Previous_Image_Filename)
+            # print(self.Previous_Image_Detection_Lines)
+            # print(self.Previous_Image_Satellites)
+            # print(previous_detection_wo_satellite)
 
             # if len(previous_detection_wo_satellite) > 0:
             if len(self.Previous_Image_Detection_Lines) > 0:
@@ -1128,12 +1111,12 @@ class MeteorDetector:
     # is to be deprecated !!!
     def detect_n_extract_meteor_image_file(self, file_dir, orig_filename, save_dir, verbose, file_for_subtraction=''):
         # Directory to save the image drawn with detection boxes
-        draw_box_file_dir = os.path.join(save_dir, '1_detection')
+        draw_box_file_dir = os.path.join(save_dir, '01_detection')
         if not os.path.exists(draw_box_file_dir):
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extracted_file_dir = os.path.join(save_dir, '2_cropped')
+        extracted_file_dir = os.path.join(save_dir, '02_cropped')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
@@ -1149,42 +1132,42 @@ class MeteorDetector:
             img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
             img = cv2.subtract(orig_img, img_for_subtraction)
 
-        # The subtracted image is purely used for line detection
-        # The original image is still used for further filtering
-        detection_lines = self.detect_meteor_from_image(img, orig_img, color=(255, 255, 0))
-        if not (detection_lines is None):
-            # print(detection_lines)
+            # The subtracted image is purely used for line detection
+            # The original image is still used for further filtering
+            detection_lines = self.detect_meteor_from_image(img, orig_img, color=(255, 255, 0))
+            if not (detection_lines is None):
+                # print(detection_lines)
 
-            '''
-            # Each image files would have the extracted files to
-            # be put to a sub-folder, which named with the image
-            # file name
-            extract_dir = os.path.join(save_dir, orig_filename)
-            if not os.path.exists(extract_dir):
-                os.mkdir(extract_dir)
-            '''
+                '''
+                # Each image files would have the extracted files to
+                # be put to a sub-folder, which named with the image
+                # file name
+                extract_dir = os.path.join(save_dir, orig_filename)
+                if not os.path.exists(extract_dir):
+                    os.mkdir(extract_dir)
+                '''
 
-            draw_img = self.draw_detection_boxes_on_image(orig_img, detection_lines)
+                draw_img = self.draw_detection_boxes_on_image(orig_img, detection_lines)
 
-            draw_filename = filename_no_ext + "_detection_{}".format(len(detection_lines)) + file_ext
+                draw_filename = filename_no_ext + "_detection_{}".format(len(detection_lines)) + file_ext
 
-            # draw_filename = os.path.join(file_dir, draw_filename)
-            # draw_filename = os.path.join(save_dir, draw_filename)
-            draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-            cv2.imwrite(draw_filename, draw_img)
+                # draw_filename = os.path.join(file_dir, draw_filename)
+                # draw_filename = os.path.join(save_dir, draw_filename)
+                draw_filename = os.path.join(draw_box_file_dir, draw_filename)
+                cv2.imwrite(draw_filename, draw_img)
 
-            # Extract the detected portions to small image files
-            # Normally they would be 640x640 size, but can be bigger
-            self.extract_meteor_images_to_file(orig_img, detection_lines, extracted_file_dir, orig_filename, verbose)
-        else:
-            # No line detected
-            # Save an image with updated file name to indicate
-            # detection is 0
-            draw_filename = filename_no_ext + "_detection_0" + file_ext
+                # Extract the detected portions to small image files
+                # Normally they would be 640x640 size, but can be bigger
+                self.extract_meteor_images_to_file(orig_img, detection_lines, extracted_file_dir, orig_filename, verbose)
+            else:
+                # No line detected
+                # Save an image with updated file name to indicate
+                # detection is 0
+                draw_filename = filename_no_ext + "_detection_0" + file_ext
 
-            # draw_filename = os.path.join(save_dir, draw_filename)
-            draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-            cv2.imwrite(draw_filename, orig_img)
+                # draw_filename = os.path.join(save_dir, draw_filename)
+                draw_filename = os.path.join(draw_box_file_dir, draw_filename)
+                cv2.imwrite(draw_filename, orig_img)
 
     # Go through all image files in the "file_dir". Will only
     # support ".jpg", ".tif" at this time.
@@ -1200,12 +1183,12 @@ class MeteorDetector:
             os.mkdir(save_dir)
 
         # Directory to save the image drawn with detection boxes
-        draw_box_file_dir = os.path.join(save_dir, '1_detection')
+        draw_box_file_dir = os.path.join(save_dir, '01_detection')
         if not os.path.exists(draw_box_file_dir):
             os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
-        extracted_file_dir = os.path.join(save_dir, '2_cropped')
+        extracted_file_dir = os.path.join(save_dir, '02_cropped')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 

@@ -10,6 +10,17 @@ DETECTION_LINE_MAX_LINE_GAP = 3
 
 DETECTION_CROP_IMAGE_BOX_SIZE = 640
 
+# If cropped image size > DETECTION_CROP_IMAGE_BOX_SIZE * ratio
+# will be divided to mosaic images, so as to improve the resolution
+RATIO_FOR_MOSAIC = 1.5
+
+# When dividing a big image to mosaic, each image would need
+# to have some overlap.
+# This ratio is about how much (of the width or height) of
+# two images to be overlapped
+# Value from 0 to 1
+MOSAIC_OVERLAP_RATIO = 0.5
+
 # To ensure the detected object is within the cropped image, would
 # need to enlarge the detection box
 # DETECTION_CROP_IMAGE_BOX_FACTOR = 1.5
@@ -74,4 +85,5 @@ LINE_DISTANCE_FOR_SATELLITE_THRESHOLD = 300
 # The Neural Network
 UNET_IMAGE_SIZE = 256
 # unet_saved_model = 'saved_model/unet_meteor_gray_256_png.hdf5'
-UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray_256_png-good.hdf5'
+# UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray_256_png-good.hdf5'
+UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray256png_final.hdf5'

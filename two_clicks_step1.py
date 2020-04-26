@@ -24,12 +24,12 @@ if __name__ == "__main__":
     # Need to have below sub-folders
     # The '2_cropped' is hardcoded, don't change
     # Other sub-folder names in below can be changed
-    extracted_dir = os.path.join(process_dir, '2_cropped')
+    extracted_dir = os.path.join(process_dir, '02_cropped')
 
     meteor_detector.detect_n_extract_meteor_from_folder(original_dir, process_dir, verbose=1)
 
     print("\nPossible objects extraction finished.")
-    print("You may go to the "'2_cropped'" folder to double check the detection objects.")
+    print("You may go to the "'02_cropped'" folder to double check the detection objects.")
     print("And just delete those you don't think they are meteors.")
     print("\nAfter this is done, you can proceed to use this command to extract the meteors out of the background:")
     print("    "'two_clicks_step2.py {}'"".format(original_dir))

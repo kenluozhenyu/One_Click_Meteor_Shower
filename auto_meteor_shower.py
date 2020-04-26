@@ -35,15 +35,19 @@ if __name__ == "__main__":
     # Need to have below sub-folders
     # The '2_cropped' is hardcoded, don't change
     # Other sub-folder names in below can be changed
-    extracted_dir = os.path.join(process_dir, '2_cropped')
+    extracted_dir = os.path.join(process_dir, '02_cropped')
 
-    gray_256_dir = os.path.join(process_dir, '3_gray_256')
-    mask_256_dir = os.path.join(process_dir, '4_mask_256')
-    mask_resize_back_dir = os.path.join(process_dir, '5_mask_resize_back')
+    mosaic_dir = os.path.join(process_dir, '03_mosaic')
+    gray_256_dir = os.path.join(process_dir, '04_gray_256')
+    mask_256_dir = os.path.join(process_dir, '05_mask_256')
+    mask_resize_back_dir = os.path.join(process_dir, '06_mask_resize_back')
+    mosaic_merge_back_dir = os.path.join(process_dir, '07_mosaic_merged_back')
+
     # mask_extended_back_dir = os.path.join(process_dir, '6_mask_extended_back')
-    object_extracted_dir = os.path.join(process_dir, '6_object_extracted')
-    FINAL_dir = os.path.join(process_dir, '7_FINAL')
-    FINAL_combined_dir = os.path.join(process_dir, '8_FINAL_combined')
+    object_extracted_dir = os.path.join(process_dir, '08_object_extracted')
+
+    FINAL_dir = os.path.join(process_dir, '09_FINAL')
+    FINAL_combined_dir = os.path.join(process_dir, '10_FINAL_combined')
 
     if do_option == "all" or do_option == "detection":
         meteor_detector.detect_n_extract_meteor_from_folder(original_dir, process_dir, verbose=1)
@@ -51,18 +55,19 @@ if __name__ == "__main__":
     if do_option == "detection":
         print("\n************************************************************")
         print("Possible objects detection finished.")
-        print("You may go to the "'2_cropped'" folder to double check the detection objects.")
+        print("You may go to the "'02_cropped'" folder to double check the detection objects.")
         print("And just delete those you don't think they are meteors.")
         print("\nAfter this is done, you can proceed to use this command to extract the meteors out of the background:")
         print("    "'auto_meteor_shower extraction {}'"".format(original_dir))
 
     if do_option == "all" or do_option == "extraction":
-        my_gen_mask.convert_image_folder_to_gray_256(extracted_dir, gray_256_dir)
+        my_gen_mask.convert_cropped_image_folder_to_mosaic_for_big_files(extracted_dir, mosaic_dir)
+        my_gen_mask.convert_image_folder_to_gray_256(mosaic_dir, gray_256_dir)
         my_gen_mask.gen_meteor_mask_from_folder(gray_256_dir, mask_256_dir)
         my_gen_mask.resize_mask_to_original_cropped_size(mask_256_dir, mask_resize_back_dir)
-
+        my_gen_mask.mosaic_mask_files_merge_back(mask_resize_back_dir, mosaic_merge_back_dir)
         my_gen_mask.extract_meteor_from_cropped_folder_with_mask(extracted_dir,
-                                                                 mask_resize_back_dir,
+                                                                 mosaic_merge_back_dir,
                                                                  object_extracted_dir,
                                                                  verbose=1)
         my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
