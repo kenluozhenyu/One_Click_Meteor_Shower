@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-DETECTION_BLUR_KERNEL_SIZE = 3
+DETECTION_BLUR_KERNEL_SIZE_FOR_EQUATORIAL_MOUNTED_IMAGES = 3
+DETECTION_BLUR_KERNEL_SIZE_FOR_FIXED_TRIPOD_IMAGES = 11
+# DETECTION_BLUR_KERNEL_SIZE_FOR_DIRECT_METHOD = 11
 DETECTION_CANNY_LOW_THRESHOLD = 50
 DETECTION_CANNY_RATIO = 3
 DETECTION_CANNY_KERNEL_SIZE = 3
@@ -83,6 +85,10 @@ LINE_DISTANCE_FOR_SATELLITE_THRESHOLD = 300
 
 # =============================================================================
 # The Neural Network
+CNN_IMAGE_SIZE = 256
+# CNN_SAVED_MODEL = 'saved_model/cnn_meteor_256.hdf5'
+CNN_SAVED_MODEL = 'saved_model/cnn_star_256.hdf5'
+
 UNET_IMAGE_SIZE = 256
 # unet_saved_model = 'saved_model/unet_meteor_gray_256_png.hdf5'
 # UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray_256_png-good.hdf5'

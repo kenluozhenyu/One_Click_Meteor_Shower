@@ -41,7 +41,7 @@ And for some very short meteors they could be missed in the detection.
 
 Anyway I think the result is still acceptable.
 
-For the"false detection", unrecognized satellites and landscape objects, the current alternative is to change to "two-clicks":
+For the"false detection", unrecognized satellites and landscape objects, a simple CNN neural network was trained to distinguish star backgrounds vs landscape objects. However this cannot solve all. The current alternative is to change to "two-clicks":
 
  1. Do the meteor detection process, stop and manually remove those false object files
  2. Resume with he 2nd script to extract the meteor objects
@@ -56,8 +56,7 @@ A U-NET Neural Network (learned from https://github.com/zhixuhao/unet) was train
 
 Due to my GPU limitation I can only train the network with 256x256 gray image samples. The generated mask files will be resized back. But need to further check if that's good enough.
 
-Now an known problem is that the training set didn't include meteor close to the Milkyway center position. The generated mask could have some problem -- **TO DO #2**
-*(2020-3-26: Should have some improvement with the latest trained network weight file. But still need continue to improve)*
+***Update (2020-4-26):**   New method introduced. Big cropped images will be divided to several small pieces for mosaic. Small pieces images to be sent to the network to generate mask files. Then the mask files will be combined back to a big one.*
 
 ## Meteor image extraction
 
@@ -87,8 +86,9 @@ The border of the extracted meteor could be too deep. Still need to adjust the a
 
 Run step example:
  - Step 1: auto_meteor_shower.py **detection** "folder name"
- - Step 2: Go to the "processed/2_cropped" folder, double check the detected images. Delete those you don't think are meteor objects
+ - Step 2: Go to the "processed/03_filtered" folder, double check the detected images. Delete those you don't think are meteor objects
  - Step 3: auto_meteor_shower.py **extraction** "folder name" *(the folder name here is the same as that used in step 1)*
 
+***Update (2020-5-17):**  One "equatorial_mount (Y/N)" option is added to the command line. Images taken with fixed tripod should choose "N" even though they are star-aligned. This can help the program to choose a bigger blur kernel size for object detection procedure.*
 
-**The trained model weight file for the U-NET is put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**
+**The trained model weight files for the Neural Networks are put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**

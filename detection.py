@@ -4,7 +4,10 @@ import numpy as np
 import copy
 import math
 import os
+import shutil
+from keras_preprocessing.image import ImageDataGenerator
 
+import model
 import settings
 
 
@@ -781,10 +784,18 @@ class MeteorDetector:
 
         return combined_box_list
 
-    def detect_meteor_from_image(self, detection_img, original_img):
+    def detect_meteor_from_image(self, detection_img, original_img, equatorial_mount=False):
 
         # To ensure we have an odd value for he kernel size
-        blur_kernel_size = settings.DETECTION_BLUR_KERNEL_SIZE
+        if equatorial_mount:
+            blur_kernel_size = settings.DETECTION_BLUR_KERNEL_SIZE_FOR_EQUATORIAL_MOUNTED_IMAGES
+        else:
+            # Images taken on fixed tripod. Even if star-align performed,
+            # stars at the edges are still distorted, and can cause many
+            # false detection.
+            # So in this case he BLUR kernel size needs to be larger
+            blur_kernel_size = settings.DETECTION_BLUR_KERNEL_SIZE_FOR_FIXED_TRIPOD_IMAGES
+
         count = blur_kernel_size % 2
         if count == 0:
             blur_kernel_size += 1
@@ -992,7 +1003,14 @@ class MeteorDetector:
     # 3) Exclude the possible satellites from the previous
     #    detection list
     # 4) Extract the detection objects from the previous image
-    def detect_n_process_the_previous_image(self, file_dir, orig_filename, save_dir, file_for_subtraction, verbose):
+    # def detect_n_process_the_previous_image(self, file_dir, orig_filename, save_dir, file_for_subtraction, verbose):
+    def detect_n_process_the_previous_image(self, file_dir, orig_filename,
+                                            draw_box_file_dir, # '01_detection'
+                                            extracted_file_dir, # '02_cropped/un-classified'
+                                            file_for_subtraction,
+                                            equatorial_mount=False,
+                                            verbose=1):
+        '''
         # Directory to save the image drawn with detection boxes
         draw_box_file_dir = os.path.join(save_dir, '01_detection')
         if not os.path.exists(draw_box_file_dir):
@@ -1003,6 +1021,8 @@ class MeteorDetector:
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
+        '''
+
         filename_w_path = os.path.join(file_dir, orig_filename)
         orig_img = cv2.imread(filename_w_path)
 
@@ -1011,7 +1031,7 @@ class MeteorDetector:
         img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
         img = cv2.subtract(orig_img, img_for_subtraction)
 
-        detection_lines = self.detect_meteor_from_image(img, orig_img)
+        detection_lines = self.detect_meteor_from_image(img, orig_img, equatorial_mount=equatorial_mount)
         if not (detection_lines is None):
             self.Current_Image_Detection_Lines = detection_lines
         else:
@@ -1089,6 +1109,16 @@ class MeteorDetector:
         self.Current_Image_Satellites = []
     # End of function
 
+    # If the images were not taken with equatorial mount, even if we
+    # performed a star-alignment the subtraction/detection method is
+    # still not suitable for these images.
+    #     -- stars at the edge will be distorted and cause false
+    #        detection
+    #
+    # So in this case we have to use the single image detection
+    # method even those it could lead to some small meteors cannot
+    # be recognized, and satellites false detected.
+    #
     # The "orig_filename" parameter should not have path info,
     # just the file name like "xxxx.jpg"
     #
@@ -1099,17 +1129,12 @@ class MeteorDetector:
     # .. 1_detection
     # .. 2_extraction
     #
-    # If the "file_for_subtraction" parameter is not null, that means
-    # we want to do a subtraction with that file, before doing detection.
-    # This file should be put in the same folder.
-    # -- This would help if the two images have been star-aligned
-    # -- Doing a subtraction would make the moving objects be very clear
-    #
-    # NOTE:
-    # ==================================================================
-    # As we also need to detect satellites with two images, this function
-    # is to be deprecated !!!
-    def detect_n_extract_meteor_image_file(self, file_dir, orig_filename, save_dir, verbose, file_for_subtraction=''):
+    def detect_n_extract_meteor_from_single_image_file(self, file_dir,
+                                                       orig_filename,
+                                                       draw_box_file_dir,
+                                                       extracted_file_dir,
+                                                       verbose):
+        '''
         # Directory to save the image drawn with detection boxes
         draw_box_file_dir = os.path.join(save_dir, '01_detection')
         if not os.path.exists(draw_box_file_dir):
@@ -1120,59 +1145,55 @@ class MeteorDetector:
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
+        '''
+
         filename_w_path = os.path.join(file_dir, orig_filename)
         orig_img = cv2.imread(filename_w_path)
 
         filename_no_ext, file_ext = os.path.splitext(orig_filename)
 
-        # Do a subtraction with another image, which has been star-aligned
-        # with this one already
-        if len(file_for_subtraction) > 0:
-            file_for_subtraction_w_path = os.path.join(file_dir, file_for_subtraction)
-            img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
-            img = cv2.subtract(orig_img, img_for_subtraction)
+        # img = cv2.subtract(orig_img, img_for_subtraction)
+        img_for_detection = copy.copy(orig_img)
 
-            # The subtracted image is purely used for line detection
-            # The original image is still used for further filtering
-            detection_lines = self.detect_meteor_from_image(img, orig_img, color=(255, 255, 0))
-            if not (detection_lines is None):
-                # print(detection_lines)
+        detection_lines = self.detect_meteor_from_image(img_for_detection, orig_img, equatorial_mount=False)
+        if not (detection_lines is None):
+            # self.Current_Image_Detection_Lines = detection_lines
+            draw_img = self.draw_detection_boxes_on_image(orig_img,
+                                                          detection_lines,
+                                                          color=(255, 255, 0))
 
-                '''
-                # Each image files would have the extracted files to
-                # be put to a sub-folder, which named with the image
-                # file name
-                extract_dir = os.path.join(save_dir, orig_filename)
-                if not os.path.exists(extract_dir):
-                    os.mkdir(extract_dir)
-                '''
+            draw_filename = filename_no_ext + "_detection_{}".format(len(detection_lines))
+            draw_filename = draw_filename + file_ext
 
-                draw_img = self.draw_detection_boxes_on_image(orig_img, detection_lines)
+            draw_filename = os.path.join(draw_box_file_dir, draw_filename)
+            cv2.imwrite(draw_filename, draw_img)
 
-                draw_filename = filename_no_ext + "_detection_{}".format(len(detection_lines)) + file_ext
+            # Extract the detected portions to small image files
+            # Normally they would be 640x640 size, but can be bigger
+            self.extract_meteor_images_to_file(orig_img,
+                                               detection_lines,
+                                               extracted_file_dir,
+                                               orig_filename,
+                                               verbose)
+        else:
+            # No line detected
+            # Save an image with updated file name to indicate
+            # detection is 0
+            draw_filename = filename_no_ext + "_detection_0" + file_ext
 
-                # draw_filename = os.path.join(file_dir, draw_filename)
-                # draw_filename = os.path.join(save_dir, draw_filename)
-                draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-                cv2.imwrite(draw_filename, draw_img)
-
-                # Extract the detected portions to small image files
-                # Normally they would be 640x640 size, but can be bigger
-                self.extract_meteor_images_to_file(orig_img, detection_lines, extracted_file_dir, orig_filename, verbose)
-            else:
-                # No line detected
-                # Save an image with updated file name to indicate
-                # detection is 0
-                draw_filename = filename_no_ext + "_detection_0" + file_ext
-
-                # draw_filename = os.path.join(save_dir, draw_filename)
-                draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-                cv2.imwrite(draw_filename, orig_img)
+            # draw_filename = os.path.join(save_dir, draw_filename)
+            draw_filename = os.path.join(draw_box_file_dir, draw_filename)
+            cv2.imwrite(draw_filename, orig_img)
+    # end of function
 
     # Go through all image files in the "file_dir". Will only
     # support ".jpg", ".tif" at this time.
     #
-    def detect_n_extract_meteor_from_folder(self, file_dir, save_dir, subtraction=True, verbose=1):
+    def detect_n_extract_meteor_from_folder(self, file_dir,
+                                            save_dir,
+                                            subtraction=True,
+                                            equatorial_mount=False,
+                                            verbose=1):
         # image_list = fnmatch.filter(os.listdir(file_dir), '*.py')
 
         included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
@@ -1189,6 +1210,15 @@ class MeteorDetector:
 
         # Directory to save the extracted small images
         extracted_file_dir = os.path.join(save_dir, '02_cropped')
+        if not os.path.exists(extracted_file_dir):
+            os.mkdir(extracted_file_dir)
+
+        # After extracted the cropped images, a CNN model is used to try to
+        # classify if the image is a meteor or not (normally, some landscape
+        # objects.
+        # The classification process will use "predict_generator", which
+        # requires the images be put to a sub-folder of this specified folder
+        extracted_file_dir = os.path.join(extracted_file_dir, 'un-classified')
         if not os.path.exists(extracted_file_dir):
             os.mkdir(extracted_file_dir)
 
@@ -1215,13 +1245,117 @@ class MeteorDetector:
                 # self.detect_n_extract_meteor_image_file(file_dir, image_file, save_dir, verbose,
                 #                                         file_for_subtraction=next_image_file)
 
-                self.detect_n_process_the_previous_image(file_dir, image_file, save_dir,
+                self.detect_n_process_the_previous_image(file_dir,
+                                                         image_file,
+                                                         draw_box_file_dir,
+                                                         extracted_file_dir,
                                                          file_for_subtraction=next_image_file,
+                                                         equatorial_mount=equatorial_mount,
                                                          verbose=verbose)
             else:
                 # Detection without image subtraction
                 # This would be rarely used now...
-                self.detect_n_extract_meteor_image_file(file_dir, image_file, save_dir, verbose)
+                self.detect_n_extract_meteor_from_single_image_file(file_dir,
+                                                                    image_file,
+                                                                    draw_box_file_dir,
+                                                                    extracted_file_dir,
+                                                                    verbose=verbose)
+        # end for-loop
+    # end of function
+
+    # Use a simple CNN classification model to filter out
+    # landscape images.
+    # For some satellites still got detected, try to classify
+    # them as well. But now the model is difficult to separate
+    # meteors and satellites
+    # def filter_possible_not_meteor_objects(self, detection_folder, keep_folder, not_sure_folder, removed_folder):
+    def filter_possible_not_meteor_objects(self, detection_folder, keep_folder, removed_folder):
+        print('\nTrying to filter out non-meteor objects ...')
+
+        parent_folder = os.path.dirname(keep_folder)
+        if not os.path.exists(parent_folder):
+            os.mkdir(parent_folder)
+        if not os.path.exists(keep_folder):
+            os.mkdir(keep_folder)
+
+        '''
+        parent_folder = os.path.dirname(not_sure_folder)
+        if not os.path.exists(parent_folder):
+            os.mkdir(parent_folder)
+        if not os.path.exists(not_sure_folder):
+            os.mkdir(not_sure_folder)
+        '''
+
+        parent_folder = os.path.dirname(removed_folder)
+        if not os.path.exists(parent_folder):
+            os.mkdir(parent_folder)
+        if not os.path.exists(removed_folder):
+            os.mkdir(removed_folder)
+
+        test_datagen = ImageDataGenerator(rescale=1. / 255)
+
+        batch_size = 1
+
+        # test_folder = os.path.join(training_data_folder, 'test')
+
+        # Normally this would be '02_cropped'
+        test_folder = detection_folder
+        test_generator = test_datagen.flow_from_directory(
+            test_folder,
+            target_size=(256, 256),
+            batch_size=batch_size,
+            shuffle=False,
+            class_mode=None)
+
+        # label_map = test_generator.class_indices
+        # print(label_map)
+
+        cnn_model = model.cnn()
+        cnn_model.load_weights(settings.CNN_SAVED_MODEL)
+
+        filenames = test_generator.filenames
+        nb_samples = len(filenames)
+
+        scores_predict = cnn_model.predict_generator(test_generator, nb_samples)
+
+        # There will be three values in each score:
+        #   [0]: 'meteor'   : 0.xxxxx
+        #   [1]: 'others'   : 0.yyyyy
+        #   [2]: 'satellite': 0.zzzzz
+        #
+        #  2020-5-13: Changed to this
+        #   [0]: 'others'   : 0.xxxxx
+        #   [1]: 'star'     : 0.yyyyy
+        #
+        # If the maximum value is scores_predict[i][1], take it as a meteor
+        # Otherwise, consider it as not a meteor
+        for i, test_file in enumerate(test_generator.filenames):
+            # The test_file would be 'un-classified/IMG_xxxxxxx.jpg
+            source_file_w_path = os.path.join(detection_folder, test_file)
+            file_basename = os.path.basename(test_file)
+
+            '''
+            if (scores_predict[i][0] >= scores_predict[i][1]) and (scores_predict[i][0] >= scores_predict[i][2]):
+                # Highly possible meteors
+                dest_file_w_path = os.path.join(keep_folder, file_basename)
+            else:
+                # Possible satellites. Put to 'not_sure' folder
+                if (scores_predict[i][2] >= scores_predict[i][1]) and (scores_predict[i][2] >= scores_predict[i][2]):
+                    dest_file_w_path = os.path.join(not_sure_folder, file_basename)
+                else:
+                    dest_file_w_path = os.path.join(removed_folder, file_basename)
+
+            '''
+
+            if scores_predict[i][0] < scores_predict[i][1]:
+                # Star image, keep
+                dest_file_w_path = os.path.join(keep_folder, file_basename)
+            else:
+                dest_file_w_path = os.path.join(removed_folder, file_basename)
+
+            shutil.copyfile(source_file_w_path, dest_file_w_path)
+    # end of function
+
 
 '''
 if __name__ == "__main__":

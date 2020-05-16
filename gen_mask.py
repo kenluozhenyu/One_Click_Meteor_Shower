@@ -516,6 +516,7 @@ class Gen_mask:
     # The file name is like this:
     #     IMG_3039_size_(05472,03648)_0006_pos_(02264,00000)_(02904,00640)_gray_256_mask_640_transparent.png
     #
+    # This process is a little bit slow. Better to make it multi-threaded
     def extend_extracted_objects_to_original_photo_size(self, file_dir, save_dir, verbose=1):
         print("\nExtending the extracted objects back to original photo size ...")
         included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',

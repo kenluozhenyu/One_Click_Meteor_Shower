@@ -153,7 +153,7 @@ def unet(pretrained_weights=None, input_size=(256, 256, 1)):
     # Tried several times, seems lr=le-6 would be more safe
     # Other bigger values would have chance to trigger the loss be 1.0 and cannot be back
 
-    model.compile(optimizer=Adam(lr=1e-6), loss=generalized_dice_loss, metrics=['accuracy'])
+    # model.compile(optimizer=Adam(lr=1e-6), loss=generalized_dice_loss, metrics=['accuracy'])
 
     # model.summary()
 
@@ -162,6 +162,31 @@ def unet(pretrained_weights=None, input_size=(256, 256, 1)):
 
     return model
 
+
+def cnn(input_size=(256, 256, 3)):
+    model = Sequential()
+
+    model.add(Conv2D(32, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Flatten())
+    model.add(Dropout(0.5))
+
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(0.5))
+
+    # model.add(Dense(3, activation='softmax'))
+    model.add(Dense(2, activation='softmax'))
+
+    return model
 
 # if __name__ == "__main__":
 #    model = unet(input_size=(640, 640, 3))

@@ -3,9 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="6e6eccdc-d9e2-4746-b0e0-409b107b926a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auto_meteor_shower.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto_meteor_shower.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_mask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.txt" beforeDir="false" afterPath="$PROJECT_DIR$/run.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/saved_model/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saved_model/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/two_clicks_step1.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step1.py" afterDir="false" />
@@ -19,15 +22,78 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
+      <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3162">
+              <caret line="186" column="21" selection-start-line="186" selection-start-column="21" selection-end-line="186" selection-end-column="21" />
+              <folding>
+                <element signature="e#24#50#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="detection.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/detection.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="1146" lean-forward="true" selection-start-line="1146" selection-end-line="1146" />
+              <folding>
+                <element signature="e#24#34#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="two_clicks_step1.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="271">
+              <caret line="48" column="82" lean-forward="true" selection-start-line="47" selection-start-column="60" selection-end-line="48" selection-end-column="82" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gen_mask.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/gen_mask.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="55" selection-start-line="22" selection-start-column="55" selection-end-line="22" selection-end-column="55" />
+              <folding>
+                <element signature="e#24#34#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="50">
+              <caret line="67" column="33" selection-start-line="67" selection-end-line="67" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="two_clicks_step2.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="31" column="6" selection-start-line="31" selection-start-column="6" selection-end-line="31" selection-end-column="6" />
+              <folding>
+                <element signature="e#24#33#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="auto_meteor_shower.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/auto_meteor_shower.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="654">
-              <caret line="74" column="8" lean-forward="true" selection-start-line="74" selection-start-column="8" selection-end-line="74" selection-end-column="36" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="85">
+              <caret line="9" column="72" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="72" />
             </state>
           </provider>
         </entry>
@@ -35,8 +101,8 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1581">
-              <caret line="93" column="129" selection-start-line="93" selection-start-column="129" selection-end-line="93" selection-end-column="129" />
+            <state relative-caret-position="577">
+              <caret line="93" column="141" selection-start-line="93" selection-start-column="141" selection-end-line="93" selection-end-column="141" />
             </state>
           </provider>
         </entry>
@@ -50,74 +116,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model.py">
+      <file leaf-file-name="detection_test - 副本.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/detection_test - 副本.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2171">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="detection.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/detection.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8129">
-              <caret line="639" selection-start-line="639" selection-end-line="639" />
+            <state>
               <folding>
-                <element signature="e#24#34#0" expanded="true" />
+                <element signature="e#0#10#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gen_mask.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gen_mask.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="382" column="48" selection-start-line="382" selection-start-column="48" selection-end-line="382" selection-end-column="48" />
-              <folding>
-                <element signature="e#24#34#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="21" column="20" selection-start-line="21" selection-end-line="21" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="two_clicks_step1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="two_clicks_step2.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="714">
-              <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
-              <folding>
-                <element signature="e#24#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="run.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/run.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="458">
-              <caret line="103" column="67" selection-start-line="103" selection-start-column="67" selection-end-line="103" selection-end-column="67" />
             </state>
           </provider>
         </entry>
@@ -151,33 +156,35 @@
         <option value="$PROJECT_DIR$/LICENSE" />
         <option value="$PROJECT_DIR$/detection_test.py" />
         <option value="$PROJECT_DIR$/unet_proc.py" />
-        <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/one_click_meteor_shower.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/backup-code.py" />
-        <option value="$PROJECT_DIR$/two_clicks_step1.py" />
-        <option value="$PROJECT_DIR$/detection.py" />
-        <option value="$PROJECT_DIR$/settings.py" />
-        <option value="$PROJECT_DIR$/gen_mask.py" />
         <option value="$PROJECT_DIR$/run.txt" />
-        <option value="$PROJECT_DIR$/auto_meteor_shower.py" />
+        <option value="$PROJECT_DIR$/gen_mask.py" />
+        <option value="$PROJECT_DIR$/model.py" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/detection.py" />
+        <option value="$PROJECT_DIR$/two_clicks_step1.py" />
         <option value="$PROJECT_DIR$/two_clicks_step2.py" />
+        <option value="$PROJECT_DIR$/auto_meteor_shower.py" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/saved_model/link.txt" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="272" />
-    <option name="y" value="37" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="261" />
+    <option name="y" value="45" />
     <option name="width" value="2165" />
-    <option name="height" value="1323" />
+    <option name="height" value="1299" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
+      <showMembers ProjectPane="true" />
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -197,17 +204,28 @@
             </path>
             <path>
               <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
+              <item name="One_Click_Meteor_Shower" type="462c0819:PsiDirectoryNode" />
+              <item name="detection.py" type="8704e2dd:PyFileNode" />
+            </path>
+            <path>
+              <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
+              <item name="One_Click_Meteor_Shower" type="462c0819:PsiDirectoryNode" />
+              <item name="detection.py" type="8704e2dd:PyFileNode" />
+              <item name="MeteorDetector" type="dd8bbb05:PyElementNode" />
+            </path>
+            <path>
+              <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/auto_meteor_shower.py" />
+    <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Wide_ResNet" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
@@ -320,7 +338,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/two_clicks_step1.py" />
-      <option name="PARAMETERS" value="F:\meteor-one-click-test-original-images\star-aligned\" />
+      <option name="PARAMETERS" value="n F:\meteor-one-click-test-2015_08_data_no_rotation\star-aligned" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -338,7 +356,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/two_clicks_step2.py" />
-      <option name="PARAMETERS" value="F:\meteor-one-click-test-original-images\star-aligned\test18" />
+      <option name="PARAMETERS" value="F:\meteor-one-click-test-2015_08_data_no_rotation\star-aligned" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -381,19 +399,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="246" y="29" width="1732" height="1058" extended-state="0" />
+    <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2346698" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25320828" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4994076" weight="0.32923076" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.23997642" side_tool="true" weight="0.18051282" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9022512" visible="true" weight="0.33164814" />
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4994076" weight="0.32923076" />
-      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.85959715" weight="0.32923076" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9022512" visible="true" weight="0.165038" />
+      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.85959715" weight="0.27410617" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.7600236" weight="0.18051282" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.91071427" weight="0.37128204" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -404,22 +422,22 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2346698" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9022512" weight="0.38220423" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2349457" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4994076" weight="0.32923076" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4994076" weight="0.32923076" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9022512" weight="0.4420513" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.91071427" weight="0.37128204" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.7600236" visible="true" weight="0.18051282" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.23997642" side_tool="true" visible="true" weight="0.18051282" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.85959715" weight="0.32923076" />
+      <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.85959715" weight="0.27410617" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.91071427" weight="0.37128204" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.7600236" weight="0.18051282" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.23997642" side_tool="true" weight="0.18051282" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4994076" weight="0.32923076" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -430,7 +448,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/detection.py</url>
-          <line>668</line>
+          <line>671</line>
           <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
@@ -438,13 +456,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gen_mask.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4913">
-          <caret line="296" column="25" selection-start-line="296" selection-start-column="25" selection-end-line="296" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -712,13 +723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="93" column="129" selection-start-line="93" selection-start-column="129" selection-end-line="93" selection-end-column="129" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backup-code.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -726,71 +730,87 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/settings.py">
+    <entry file="file://$PROJECT_DIR$/run.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="21" column="20" selection-start-line="21" selection-end-line="21" selection-end-column="20" />
+        <state relative-caret-position="1377">
+          <caret line="81" column="37" selection-start-line="81" selection-start-column="37" selection-end-line="81" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/detection.py">
+    <entry file="file://$PROJECT_DIR$/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8129">
-          <caret line="639" selection-start-line="639" selection-end-line="639" />
+        <state relative-caret-position="3162">
+          <caret line="186" column="21" selection-start-line="186" selection-start-column="21" selection-end-line="186" selection-end-column="21" />
           <folding>
-            <element signature="e#24#34#0" expanded="true" />
+            <element signature="e#24#50#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/gen_mask.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="382" column="48" selection-start-line="382" selection-start-column="48" selection-end-line="382" selection-end-column="48" />
+        <state relative-caret-position="374">
+          <caret line="22" column="55" selection-start-line="22" selection-start-column="55" selection-end-line="22" selection-end-column="55" />
           <folding>
             <element signature="e#24#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/run.txt">
+    <entry file="file://$PROJECT_DIR$/detection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="458">
-          <caret line="103" column="67" selection-start-line="103" selection-start-column="67" selection-end-line="103" selection-end-column="67" />
+        <state relative-caret-position="221">
+          <caret line="1146" lean-forward="true" selection-start-line="1146" selection-end-line="1146" />
+          <folding>
+            <element signature="e#24#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/detection_test - 副本.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auto_meteor_shower.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="654">
-          <caret line="74" column="8" lean-forward="true" selection-start-line="74" selection-start-column="8" selection-end-line="74" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="271">
+          <caret line="48" column="82" lean-forward="true" selection-start-line="47" selection-start-column="60" selection-end-line="48" selection-end-column="82" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
+        <state relative-caret-position="152">
+          <caret line="31" column="6" selection-start-line="31" selection-start-column="6" selection-end-line="31" selection-end-column="6" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model.py">
+    <entry file="file://$PROJECT_DIR$/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2171">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="50">
+          <caret line="67" column="33" selection-start-line="67" selection-end-line="67" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto_meteor_shower.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="9" column="72" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="577">
+          <caret line="93" column="141" selection-start-line="93" selection-start-column="141" selection-end-line="93" selection-end-column="141" />
         </state>
       </provider>
     </entry>
