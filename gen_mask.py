@@ -3,7 +3,10 @@ import cv2
 import os
 import math
 import shutil
+import threading
+import multiprocessing
 from PIL import Image, ImageOps, ImageChops
+from keras_preprocessing.image import ImageDataGenerator
 
 import model
 import unet_proc
@@ -162,7 +165,24 @@ class Gen_mask:
         num_image = len(test_image_list)
 
         testGene = unet_proc.testGenerator(image_folder, as_gray=True)
+
+        '''
+        test_datagen = ImageDataGenerator(rescale=1. / 255)
+
+        batch_size = 1
+
+        # test_folder = os.path.dirname(image_folder)
+        test_generator = test_datagen.flow_from_directory(
+            image_folder,
+            target_size=(256, 256),
+            batch_size=batch_size,
+            color_mode='grayscale',
+            shuffle=False,
+            class_mode=None)
+        '''
+
         results = unet_model.predict_generator(testGene, num_image, verbose=1)
+        # results = unet_model.predict_generator(test_generator, num_image, verbose=1)
 
         unet_proc.saveResult_V2(output_folder, results, test_image_list)
 
@@ -517,16 +537,26 @@ class Gen_mask:
     #     IMG_3039_size_(05472,03648)_0006_pos_(02264,00000)_(02904,00640)_gray_256_mask_640_transparent.png
     #
     # This process is a little bit slow. Better to make it multi-threaded
-    def extend_extracted_objects_to_original_photo_size(self, file_dir, save_dir, verbose=1):
-        print("\nExtending the extracted objects back to original photo size ...")
-        included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',
-                               'TIFF']
+    # -- This is implemented by calling the
+    #        extend_extracted_objects_to_original_photo_size_by_multi_threading
+    #    function
+    # When using multi-thread mode, the "selected_image_list" parameter is to
+    # be used. It specify a sub-set of the image list to be handled by a thread.
+    def extend_extracted_objects_to_original_photo_size(self, file_dir, save_dir, selected_image_list=[], verbose=1):
+        if len(selected_image_list) == 0:
+            print("\nExtending the extracted objects back to original photo size ...")
+            # No file list specified
+            # Get all image file list in the folder
+            included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',
+                                   'TIFF']
+
+            image_list = [fn for fn in os.listdir(file_dir)
+                          if any(fn.endswith(ext) for ext in included_extensions)]
+        else:
+            image_list = selected_image_list
 
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
-
-        image_list = [fn for fn in os.listdir(file_dir)
-                      if any(fn.endswith(ext) for ext in included_extensions)]
 
         for image_file in image_list:
             if verbose:
@@ -577,6 +607,71 @@ class Gen_mask:
 
             cv2.imwrite(file_to_save, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 3])
 
+    def extend_extracted_objects_to_original_photo_size_by_multi_threading(self, file_dir, save_dir, verbose=1):
+        print("\nExtending the extracted objects back to original photo size ...")
+        included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',
+                               'TIFF']
+
+        if not os.path.exists(save_dir):
+            os.mkdir(save_dir)
+
+        image_list = [fn for fn in os.listdir(file_dir)
+                      if any(fn.endswith(ext) for ext in included_extensions)]
+
+        CPU_count = multiprocessing.cpu_count()
+
+        num_image_list = len(image_list)
+
+        size_per_sublist = math.ceil(num_image_list / CPU_count)
+        print('    Totally {} images to be processed by {} CPU cores'.format(num_image_list, CPU_count))
+        print("    Each core to handle {} images".format(size_per_sublist))
+
+        thread_set = []
+
+        start_from = 0
+        num = 0
+
+        # i = 0, 1, ... CPU_count - 1
+        for i in range(CPU_count):
+            # print(len(url_list_set[i]))
+            # print(url_list_set[i])
+
+            # 0 ~ 9:   10
+            # 10 ~ 19: 10
+            start_from = size_per_sublist * i
+
+            # Extreme case, the CPU count is larger than
+            # the number of images, we don't need to
+            # create new thread
+            if start_from >= num_image_list:
+                break
+
+            num = size_per_sublist
+            if start_from + num > num_image_list:
+                # (num_image_list-1) is the maximum index of the list
+                num = (num_image_list-1)-start_from+1
+
+            # print('\nThread-{0:03d}:'.format(i))
+            # print(start_from)
+            # print(num)
+
+            subset_image_list = image_list[start_from:start_from+num]
+            # print(subset_image_list)
+
+            thread_set.append(threading.Thread(target=self.extend_extracted_objects_to_original_photo_size,
+                                               args=(file_dir, save_dir, subset_image_list, verbose)))
+
+        # thread_set = [myThread(i + 1, "Thread-{0:03d}".format(i + 1), start_from, num) for i in range(NUM_OF_THREADS)]
+
+        for index, thread_process in enumerate(thread_set):
+            thread_process.start()
+            print('    Thread # {0:03d} started ...'.format(index))
+
+        for thread_process in thread_set:
+            thread_process.join()
+
+        print("\nMulti-thread process done !")
+
     def combine_meteor_images_to_one(self, meteor_dir, save_dir, verbose):
         print("\nCombining the meteor images to one ...")
         included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
@@ -614,7 +709,7 @@ class Gen_mask:
 
         combined_img.save(file_to_save, 'PNG')
 
-
+'''
 if __name__ == "__main__":
     # original_dir = 'data/meteor/meteor-data/meteor-detection/original_images/'
 
@@ -663,3 +758,4 @@ if __name__ == "__main__":
     # mask_file = 'F:/test/IMG_3119_size_(05472,03648)_0001_pos_(02650,01938)_(03700,02988)_gray_256_mask_1050.png'
     # save_file = 'F:/test/IMG_3119_extracted_v2.png'
     # my_gen_mask.extract_meteor_from_file_with_mask(cropped_photo_file, mask_file, save_file)
+'''

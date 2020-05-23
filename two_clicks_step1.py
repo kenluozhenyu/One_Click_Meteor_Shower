@@ -25,8 +25,7 @@ if __name__ == "__main__":
         print("No such directory: {}".format(original_dir))
         sys.exit(1)
 
-    meteor_detector = detection.MeteorDetector()
-    # my_gen_mask = gen_mask.Gen_mask()
+    # meteor_detector = detection.MeteorDetector()
 
     # Below sub-folders will be created by the program
     process_dir = os.path.join(original_dir, 'process')
@@ -41,23 +40,39 @@ if __name__ == "__main__":
     # not_sure_dir = os.path.join(filtered_dir, 'not-sure')
     removed_dir = os.path.join(filtered_dir, 'removed')
 
-    # if detect_option == "subtract":
     if equatorial_mount_option == 'Y':
+        '''
         meteor_detector.detect_n_extract_meteor_from_folder(original_dir,
                                                             process_dir,
                                                             subtraction=True,
                                                             equatorial_mount=True,
                                                             verbose=1)
+        '''
+        detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
+                                                                           process_dir,
+                                                                           subtraction=True,
+                                                                           equatorial_mount=True,
+                                                                           verbose=1)
     else:
+        '''
         meteor_detector.detect_n_extract_meteor_from_folder(original_dir,
                                                             process_dir,
                                                             subtraction=True,
                                                             equatorial_mount=False,
                                                             verbose=1)
+        '''
+        detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
+                                                                           process_dir,
+                                                                           subtraction=True,
+                                                                           equatorial_mount=False,
+                                                                           verbose=1)
 
     # meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, not_sure_dir, removed_dir)
-    meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)
+    # meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)
 
+    detection.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)
+
+    print("\n======================================================================================================")
     print("\nPossible objects extraction finished.")
     # print("You may go to the "'02_cropped'" folder to double check the detection objects.")
     print("\nYou may go to the "'03_filtered'" folder to double check the detection objects.")

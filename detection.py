@@ -5,6 +5,8 @@ import copy
 import math
 import os
 import shutil
+import threading
+import multiprocessing
 from keras_preprocessing.image import ImageDataGenerator
 
 import model
@@ -171,7 +173,7 @@ class HoughBundler:
 
 
 class MeteorDetector:
-    def __init__(self):
+    def __init__(self, thread_name='Single thread'):
         # In order to detect satellites (or planes), we need to compare
         # the previous image and the current image.
         #
@@ -207,6 +209,8 @@ class MeteorDetector:
 
         self.Current_Image_Detection_Lines = []
         self.Current_Image_Satellites = []
+
+        self.Thread_Name = thread_name
 
     # When two lines have the similar angel, get the two closest points
     # This is for next step to determine if these two lines are in the
@@ -949,7 +953,7 @@ class MeteorDetector:
 
             file_to_save = os.path.join(save_dir, file_to_save)
             if verbose:
-                print("    saving {} ...".format(file_to_save))
+                print("{}:    saving {} ...".format(self.Thread_Name, file_to_save))
 
             cv2.imwrite(file_to_save, crop_img)
         # End of function
@@ -991,8 +995,9 @@ class MeteorDetector:
         # end of the for previous_line loop
 
         if verbose:
-            print('... {} detected {} satellites'.format(self.Previous_Image_Filename,
-                                                         len(self.Previous_Image_Satellites)))
+            print('{}: ... {} detected {} satellites'.format(self.Thread_Name,
+                                                             self.Previous_Image_Filename,
+                                                             len(self.Previous_Image_Satellites)))
         # End of function
 
     # Logic:
@@ -1189,29 +1194,50 @@ class MeteorDetector:
     # Go through all image files in the "file_dir". Will only
     # support ".jpg", ".tif" at this time.
     #
+    # If the "selected_image_list" parameter is not null, that means
+    # we want to use multi-thread to process the images in the folder.
+    # And each thread just process the image files in the "selected_image_list"
+    #
+    # The "selected_image_list" will normally contain one more file, which
+    # is the file in the next sub-list for the next thread.
+    #
+    # When using multi-thread method, parameter "last_image_needs_detection"
+    # will be normally "False" except for the last thread that processes the
+    # last part of the image list.
+    #
     def detect_n_extract_meteor_from_folder(self, file_dir,
                                             save_dir,
                                             subtraction=True,
                                             equatorial_mount=False,
+                                            selected_image_list=[],
+                                            last_image_needs_detection=False,
                                             verbose=1):
         # image_list = fnmatch.filter(os.listdir(file_dir), '*.py')
 
-        included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
-        image_list = [fn for fn in os.listdir(file_dir)
-                      if any(fn.endswith(ext) for ext in included_extensions)]
+        if len(selected_image_list) == 0:
+            included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP',
+                                   'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
+            image_list = [fn for fn in os.listdir(file_dir)
+                          if any(fn.endswith(ext) for ext in included_extensions)]
+        else:
+            image_list = selected_image_list
 
-        if not os.path.exists(save_dir):
-            os.mkdir(save_dir)
+        # if not os.path.exists(save_dir):
+        #     os.mkdir(save_dir)
 
         # Directory to save the image drawn with detection boxes
         draw_box_file_dir = os.path.join(save_dir, '01_detection')
-        if not os.path.exists(draw_box_file_dir):
-            os.mkdir(draw_box_file_dir)
+        # These folder should have been created by the procedure
+        # that calls this function.
+        # Not suitable to create same folders by multi-threading
+        #
+        # if not os.path.exists(draw_box_file_dir):
+        #     os.mkdir(draw_box_file_dir)
 
         # Directory to save the extracted small images
         extracted_file_dir = os.path.join(save_dir, '02_cropped')
-        if not os.path.exists(extracted_file_dir):
-            os.mkdir(extracted_file_dir)
+        # if not os.path.exists(extracted_file_dir):
+        #     os.mkdir(extracted_file_dir)
 
         # After extracted the cropped images, a CNN model is used to try to
         # classify if the image is a meteor or not (normally, some landscape
@@ -1224,8 +1250,12 @@ class MeteorDetector:
 
         num_of_images = len(image_list)
         for index, image_file in enumerate(image_list):
+            # The last one in the sub-set
+            if (index == num_of_images - 1) and (not last_image_needs_detection):
+                break
+
             if verbose:
-                print("\nProcessing image {} ...".format(image_file))
+                print("\n{} is processing image {} ...".format(self.Thread_Name, image_file))
 
             if subtraction and num_of_images > 1:
                 # For star-aligned images, doing a subtraction will easily remove
@@ -1263,20 +1293,153 @@ class MeteorDetector:
         # end for-loop
     # end of function
 
-    # Use a simple CNN classification model to filter out
-    # landscape images.
-    # For some satellites still got detected, try to classify
-    # them as well. But now the model is difficult to separate
-    # meteors and satellites
-    # def filter_possible_not_meteor_objects(self, detection_folder, keep_folder, not_sure_folder, removed_folder):
-    def filter_possible_not_meteor_objects(self, detection_folder, keep_folder, removed_folder):
-        print('\nTrying to filter out non-meteor objects ...')
 
-        parent_folder = os.path.dirname(keep_folder)
-        if not os.path.exists(parent_folder):
-            os.mkdir(parent_folder)
-        if not os.path.exists(keep_folder):
-            os.mkdir(keep_folder)
+class Detection_Thread(threading.Thread):
+    def __init__(self, threadID, name,
+                 file_dir,
+                 save_dir,
+                 subtraction=True,
+                 equatorial_mount=False,
+                 selected_image_list=[],
+                 last_image_needs_detection=False,
+                 verbose=1):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.file_dir = file_dir
+        self.save_dir = save_dir
+        self.subtraction = subtraction
+        self.equatorial_mount = equatorial_mount
+        self.image_list = selected_image_list
+        self.last_image_needs_detection = last_image_needs_detection
+        self.verbose = verbose
+
+    def run(self):
+        print("\nStart thread: {}... ".format(self.name))
+        meteor_detector = MeteorDetector(self.name)
+        meteor_detector.detect_n_extract_meteor_from_folder(self.file_dir,
+                                                            self.save_dir,
+                                                            self.subtraction,
+                                                            self.equatorial_mount,
+                                                            self.image_list,
+                                                            self.last_image_needs_detection,
+                                                            verbose=1)
+        print("\nThread {} processing done ! \n".format(self.name))
+
+
+# This is the main interface to be called by external program
+def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
+                                                             save_dir,
+                                                             subtraction=True,
+                                                             equatorial_mount=False,
+                                                             verbose=1):
+    included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
+    image_list = [fn for fn in os.listdir(file_dir)
+                  if any(fn.endswith(ext) for ext in included_extensions)]
+
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
+
+    # Directory to save the image drawn with detection boxes
+    draw_box_file_dir = os.path.join(save_dir, '01_detection')
+    if not os.path.exists(draw_box_file_dir):
+        os.mkdir(draw_box_file_dir)
+
+    # Directory to save the extracted small images
+    extracted_file_dir = os.path.join(save_dir, '02_cropped')
+    if not os.path.exists(extracted_file_dir):
+        os.mkdir(extracted_file_dir)
+
+    CPU_count = multiprocessing.cpu_count()
+
+    # To avoid resource outage
+    # 24 cores would consume about 12G memory on 5D Make III images
+    # 12 cores would consume about 8G memory on 5D Make III images
+    if CPU_count > 24:
+        CPU_count = 24
+
+    num_image_list = len(image_list)
+
+    size_per_sublist = math.ceil(num_image_list / CPU_count)
+    print('\nTotally {} images to be processed by {} CPU cores'.format(num_image_list, CPU_count))
+    print("Each core to handle {} images".format(size_per_sublist))
+
+    thread_set = []
+
+    start_from = 0
+    num = 0
+
+    # i = 0, 1, ... CPU_count - 1
+    for i in range(CPU_count):
+        # print(len(url_list_set[i]))
+        # print(url_list_set[i])
+
+        # 0 ~ 9:   10
+        # 10 ~ 19: 10
+        start_from = size_per_sublist * i
+
+        # Extreme case, the CPU count is larger than
+        # the number of images, we don't need to
+        # create new thread
+        if start_from >= num_image_list:
+            break
+
+        num = size_per_sublist
+
+        last_image_needs_detection = False
+
+        if start_from + num > num_image_list:
+            # (num_image_list-1) is the maximum index of the list
+            num = (num_image_list - 1) - start_from + 1
+
+            # This should be the last sub-set,
+            # the last_image_needs_detection should be TRUE
+            last_image_needs_detection = True
+            subset_image_list = image_list[start_from:start_from + num]
+        else:
+            last_image_needs_detection = False
+            # Adding one more image in the list
+            # The last one doesn't need to be processed
+            # It will be processed in another thread (as the fist one)
+            subset_image_list = image_list[start_from:start_from + num + 1]
+
+        # print('\nThread-{0:03d}:'.format(i))
+        # print(start_from)
+        # print(num)
+        # print(subset_image_list)
+
+        thread_set.append(Detection_Thread(i+1, "Thread-{0:03d}".format(i + 1),
+                                           file_dir,
+                                           save_dir,
+                                           subtraction,
+                                           equatorial_mount,
+                                           subset_image_list,
+                                           last_image_needs_detection=last_image_needs_detection,
+                                           verbose=verbose))
+    for thread_process in thread_set:
+        thread_process.start()
+
+    for thread_process in thread_set:
+        thread_process.join()
+
+    print("\nMulti-thread process for image detection done !")
+
+
+# Use a simple CNN classification model to filter out
+# landscape images.
+# For some satellites still got detected, try to classify
+# them as well. But now the model is difficult to separate
+# meteors and satellites
+# def filter_possible_not_meteor_objects(self, detection_folder, keep_folder, not_sure_folder, removed_folder):
+def filter_possible_not_meteor_objects(detection_folder, keep_folder, removed_folder):
+    print('\n************************************************')
+    print('Trying to filter out non-meteor objects ...')
+
+    parent_folder = os.path.dirname(keep_folder)
+    if not os.path.exists(parent_folder):
+        os.mkdir(parent_folder)
+    if not os.path.exists(keep_folder):
+        os.mkdir(keep_folder)
 
         '''
         parent_folder = os.path.dirname(not_sure_folder)
@@ -1286,75 +1449,78 @@ class MeteorDetector:
             os.mkdir(not_sure_folder)
         '''
 
-        parent_folder = os.path.dirname(removed_folder)
-        if not os.path.exists(parent_folder):
-            os.mkdir(parent_folder)
-        if not os.path.exists(removed_folder):
-            os.mkdir(removed_folder)
+    parent_folder = os.path.dirname(removed_folder)
+    if not os.path.exists(parent_folder):
+        os.mkdir(parent_folder)
+    if not os.path.exists(removed_folder):
+        os.mkdir(removed_folder)
 
-        test_datagen = ImageDataGenerator(rescale=1. / 255)
+    test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-        batch_size = 1
+    batch_size = 1
 
-        # test_folder = os.path.join(training_data_folder, 'test')
+    # test_folder = os.path.join(training_data_folder, 'test')
 
-        # Normally this would be '02_cropped'
-        test_folder = detection_folder
-        test_generator = test_datagen.flow_from_directory(
-            test_folder,
-            target_size=(256, 256),
-            batch_size=batch_size,
-            shuffle=False,
-            class_mode=None)
+    # Normally this would be '02_cropped'
+    test_folder = detection_folder
+    test_generator = test_datagen.flow_from_directory(
+        test_folder,
+        target_size=(256, 256),
+        batch_size=batch_size,
+        shuffle=False,
+        class_mode=None)
 
-        # label_map = test_generator.class_indices
-        # print(label_map)
+    # label_map = test_generator.class_indices
+    # print(label_map)
 
-        cnn_model = model.cnn()
-        cnn_model.load_weights(settings.CNN_SAVED_MODEL)
+    cnn_model = model.cnn()
+    # cnn_model = model.cnn_2()
+    cnn_model.load_weights(settings.CNN_SAVED_MODEL)
 
-        filenames = test_generator.filenames
-        nb_samples = len(filenames)
+    filenames = test_generator.filenames
+    nb_samples = len(filenames)
 
-        scores_predict = cnn_model.predict_generator(test_generator, nb_samples)
+    scores_predict = cnn_model.predict_generator(test_generator, nb_samples, verbose=1)
 
-        # There will be three values in each score:
-        #   [0]: 'meteor'   : 0.xxxxx
-        #   [1]: 'others'   : 0.yyyyy
-        #   [2]: 'satellite': 0.zzzzz
-        #
-        #  2020-5-13: Changed to this
-        #   [0]: 'others'   : 0.xxxxx
-        #   [1]: 'star'     : 0.yyyyy
-        #
-        # If the maximum value is scores_predict[i][1], take it as a meteor
-        # Otherwise, consider it as not a meteor
-        for i, test_file in enumerate(test_generator.filenames):
-            # The test_file would be 'un-classified/IMG_xxxxxxx.jpg
-            source_file_w_path = os.path.join(detection_folder, test_file)
-            file_basename = os.path.basename(test_file)
+    # There will be three values in each score:
+    #   [0]: 'meteor'   : 0.xxxxx
+    #   [1]: 'others'   : 0.yyyyy
+    #   [2]: 'satellite': 0.zzzzz
+    #
+    #  2020-5-13: Changed to this
+    #   [0]: 'others'   : 0.xxxxx
+    #   [1]: 'star'     : 0.yyyyy
+    #
+    # If the maximum value is scores_predict[i][1], take it as a meteor
+    # Otherwise, consider it as not a meteor
+    for i, test_file in enumerate(test_generator.filenames):
+        # The test_file would be 'un-classified/IMG_xxxxxxx.jpg
+        source_file_w_path = os.path.join(detection_folder, test_file)
+        file_basename = os.path.basename(test_file)
 
-            '''
-            if (scores_predict[i][0] >= scores_predict[i][1]) and (scores_predict[i][0] >= scores_predict[i][2]):
-                # Highly possible meteors
-                dest_file_w_path = os.path.join(keep_folder, file_basename)
-            else:
-                # Possible satellites. Put to 'not_sure' folder
-                if (scores_predict[i][2] >= scores_predict[i][1]) and (scores_predict[i][2] >= scores_predict[i][2]):
-                    dest_file_w_path = os.path.join(not_sure_folder, file_basename)
-                else:
-                    dest_file_w_path = os.path.join(removed_folder, file_basename)
-
-            '''
-
-            if scores_predict[i][0] < scores_predict[i][1]:
-                # Star image, keep
-                dest_file_w_path = os.path.join(keep_folder, file_basename)
+        '''
+        if (scores_predict[i][0] >= scores_predict[i][1]) and (scores_predict[i][0] >= scores_predict[i][2]):
+            # Highly possible meteors
+            dest_file_w_path = os.path.join(keep_folder, file_basename)
+        else:
+            # Possible satellites. Put to 'not_sure' folder
+            if (scores_predict[i][2] >= scores_predict[i][1]) and (scores_predict[i][2] >= scores_predict[i][2]):
+                dest_file_w_path = os.path.join(not_sure_folder, file_basename)
             else:
                 dest_file_w_path = os.path.join(removed_folder, file_basename)
 
-            shutil.copyfile(source_file_w_path, dest_file_w_path)
-    # end of function
+        '''
+
+        if scores_predict[i][0] < scores_predict[i][1]:
+            # Star image, keep
+            dest_file_w_path = os.path.join(keep_folder, file_basename)
+        else:
+            dest_file_w_path = os.path.join(removed_folder, file_basename)
+
+        shutil.copyfile(source_file_w_path, dest_file_w_path)
+
+# end of function
+
 
 
 '''

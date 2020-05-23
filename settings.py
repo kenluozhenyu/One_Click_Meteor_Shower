@@ -10,7 +10,8 @@ DETECTION_LINE_THRESHOLD = 50
 DETECTION_LINE_MIN_LINE_LENGTH = 30
 DETECTION_LINE_MAX_LINE_GAP = 3
 
-DETECTION_CROP_IMAGE_BOX_SIZE = 640
+# DETECTION_CROP_IMAGE_BOX_SIZE = 640
+DETECTION_CROP_IMAGE_BOX_SIZE = 256
 
 # If cropped image size > DETECTION_CROP_IMAGE_BOX_SIZE * ratio
 # will be divided to mosaic images, so as to improve the resolution
@@ -86,8 +87,9 @@ LINE_DISTANCE_FOR_SATELLITE_THRESHOLD = 300
 # =============================================================================
 # The Neural Network
 CNN_IMAGE_SIZE = 256
-# CNN_SAVED_MODEL = 'saved_model/cnn_meteor_256.hdf5'
 CNN_SAVED_MODEL = 'saved_model/cnn_star_256.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256-20200517-0.074.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256-20200518-0.091.hdf5'
 
 UNET_IMAGE_SIZE = 256
 # unet_saved_model = 'saved_model/unet_meteor_gray_256_png.hdf5'

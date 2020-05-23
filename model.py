@@ -135,11 +135,11 @@ def unet(pretrained_weights=None, input_size=(256, 256, 1)):
     conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(merge9)
     conv9 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     conv9 = Conv2D(2, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
-    #conv9 = Conv2D(3, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
+    # conv9 = Conv2D(3, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv9)
     conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
-    #conv10 = Conv2D(3, 1, activation='sigmoid')(conv9)
+    # conv10 = Conv2D(3, 1, activation='sigmoid')(conv9)
 
-    model = Model(input=inputs, output=conv10)
+    model = Model(inputs=inputs, outputs=conv10)
 
     # model.compile(optimizer=Adam(lr=1e-7), loss='binary_crossentropy', metrics=['accuracy'])
 
@@ -185,6 +185,38 @@ def cnn(input_size=(256, 256, 3)):
 
     # model.add(Dense(3, activation='softmax'))
     model.add(Dense(2, activation='softmax'))
+
+    return model
+
+
+# Just for further trial
+def cnn_2(input_size=(256, 256, 3)):
+    model = Sequential()
+
+    model.add(Conv2D(64, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Flatten())
+    model.add(Dropout(0.5))
+
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(0.5))
+
+    model.add(Dense(32, activation='relu'))
+    model.add(Dropout(0.5))
+
+    # model.add(Dense(3, activation='softmax'))
+    model.add(Dense(2, activation='sigmoid'))
 
     return model
 

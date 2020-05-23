@@ -82,23 +82,39 @@ if __name__ == "__main__":
 
     if do_option == "all" or do_option == "detection":
         if equatorial_mount_option == 'Y':
+            '''
             meteor_detector.detect_n_extract_meteor_from_folder(original_dir,
                                                                 process_dir,
                                                                 subtraction=True,
                                                                 equatorial_mount=True,
                                                                 verbose=1)
+            '''
+            detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
+                                                                               process_dir,
+                                                                               subtraction=True,
+                                                                               equatorial_mount=True,
+                                                                               verbose=1)
         else:
+            '''
             meteor_detector.detect_n_extract_meteor_from_folder(original_dir,
                                                                 process_dir,
                                                                 subtraction=True,
                                                                 equatorial_mount=False,
                                                                 verbose=1)
+            '''
+            detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
+                                                                               process_dir,
+                                                                               subtraction=True,
+                                                                               equatorial_mount=False,
+                                                                               verbose=1)
 
         # meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, not_sure_dir, removed_dir)
-        meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)
+        # meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)
+        detection.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)
 
     if do_option == "detection":
-        print("\n************************************************************")
+        print(
+            "\n======================================================================================================")
         print("\nPossible objects extraction finished.")
         # print("You may go to the "'02_cropped'" folder to double check the detection objects.")
         print("\nYou may go to the "'03_filtered'" folder to double check the detection objects.")
@@ -121,6 +137,8 @@ if __name__ == "__main__":
                                                                  mosaic_merge_back_dir,
                                                                  object_extracted_dir,
                                                                  verbose=1)
-        my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
+        # my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
+        my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir, FINAL_dir)
         my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, verbose=1)
+
         print("\nProcess finished!")

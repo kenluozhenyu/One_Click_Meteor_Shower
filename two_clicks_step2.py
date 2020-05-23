@@ -44,22 +44,18 @@ if __name__ == "__main__":
     FINAL_dir = os.path.join(process_dir, '10_FINAL')
     FINAL_combined_dir = os.path.join(process_dir, '11_FINAL_combined')
 
-    # my_gen_mask.convert_cropped_image_folder_to_mosaic_for_big_files(extracted_dir, mosaic_dir)
     my_gen_mask.convert_cropped_image_folder_to_mosaic_for_big_files(keep_dir, mosaic_dir)
     my_gen_mask.convert_image_folder_to_gray_256(mosaic_dir, gray_256_dir)
     my_gen_mask.gen_meteor_mask_from_folder(gray_256_dir, mask_256_dir)
     my_gen_mask.resize_mask_to_original_cropped_size(mask_256_dir, mask_resize_back_dir)
     my_gen_mask.mosaic_mask_files_merge_back(mask_resize_back_dir, mosaic_merge_back_dir)
-    # my_gen_mask.extract_meteor_from_cropped_folder_with_mask(extracted_dir,
     my_gen_mask.extract_meteor_from_cropped_folder_with_mask(keep_dir,
                                                              mosaic_merge_back_dir,
                                                              object_extracted_dir,
                                                              verbose=1)
 
-    # my_gen_mask.extract_meteor_from_photo_folder_with_mask(original_dir, mask_extended_back_dir, FINAL_dir, verbose=1)
-
-    my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
+    # my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
+    my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir, FINAL_dir)
     my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, verbose=1)
 
     print("\nProcess finished!")
-
