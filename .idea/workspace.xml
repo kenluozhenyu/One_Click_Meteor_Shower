@@ -3,14 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6e6eccdc-d9e2-4746-b0e0-409b107b926a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto_meteor_shower.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto_meteor_shower.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backup-code.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_mask.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/two_clicks_step1.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/two_clicks_step2.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/excuteable/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/excuteable/link.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,8 +17,8 @@
       <file leaf-file-name="detection.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/detection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2582">
-              <caret line="1471" lean-forward="true" selection-start-line="1471" selection-end-line="1471" />
+            <state relative-caret-position="24820">
+              <caret line="1471" selection-start-line="1471" selection-end-line="1471" />
               <folding>
                 <element signature="e#24#34#0" expanded="true" />
               </folding>
@@ -33,20 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="two_clicks_step1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/two_clicks_step1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="485">
-              <caret line="74" column="117" lean-forward="true" selection-start-line="74" selection-start-column="4" selection-end-line="74" selection-end-column="117" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="two_clicks_step2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="621">
-              <caret line="57" column="115" lean-forward="true" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="115" />
+            <state relative-caret-position="828">
+              <caret line="57" column="115" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="115" />
               <folding>
                 <element signature="e#24#33#0" expanded="true" />
               </folding>
@@ -54,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="auto_meteor_shower.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/auto_meteor_shower.py">
+      <file leaf-file-name="link.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/excuteable/link.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="893">
-              <caret line="142" column="8" selection-start-line="142" selection-start-column="8" selection-end-line="142" selection-end-column="8" />
+            <state relative-caret-position="51">
+              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
             </state>
           </provider>
         </entry>
@@ -66,8 +50,8 @@
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="689">
-              <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
+            <state relative-caret-position="1649">
+              <caret line="97" selection-start-line="97" selection-end-line="97" />
             </state>
           </provider>
         </entry>
@@ -114,14 +98,15 @@
         <option value="$PROJECT_DIR$/model.py" />
         <option value="$PROJECT_DIR$/two_clicks_step2.py" />
         <option value="$PROJECT_DIR$/auto_meteor_shower.py" />
+        <option value="$PROJECT_DIR$/excuteable/link.txt" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="535" />
-    <option name="y" value="178" />
-    <option name="width" value="1520" />
-    <option name="height" value="938" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="60" />
+    <option name="y" value="16" />
+    <option name="width" value="2260" />
+    <option name="height" value="1310" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -131,12 +116,18 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
               <item name="One_Click_Meteor_Shower" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
+              <item name="One_Click_Meteor_Shower" type="462c0819:PsiDirectoryNode" />
+              <item name="excuteable" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
@@ -150,18 +141,30 @@
             </path>
             <path>
               <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
-              <item name="One_Click_Meteor_Shower" type="462c0819:PsiDirectoryNode" />
-              <item name="detection.py" type="8704e2dd:PyFileNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
             <path>
               <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6 (untitled) &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6 (untitled) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="site-packages" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="One_Click_Meteor_Shower" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6 (untitled) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="site-packages" type="462c0819:PsiDirectoryNode" />
+              <item name="tensorflow" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -360,13 +363,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="2062" height="1126" extended-state="6" />
+    <frame x="48" y="13" width="1808" height="1048" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25320828" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2895034" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4994076" weight="0.32923076" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.23997642" side_tool="true" weight="0.18051282" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9022512" visible="true" weight="0.1496461" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.9022512" weight="0.16245884" />
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4994076" weight="0.32923076" />
       <window_info anchor="bottom" id="Python Console" order="9" sideWeight="0.85959715" weight="0.380182" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -410,13 +413,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="544">
@@ -684,8 +680,8 @@
     <entry file="file://$PROJECT_DIR$/backup-code.py" />
     <entry file="file://$PROJECT_DIR$/detection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2582">
-          <caret line="1471" lean-forward="true" selection-start-line="1471" selection-end-line="1471" />
+        <state relative-caret-position="24820">
+          <caret line="1471" selection-start-line="1471" selection-end-line="1471" />
           <folding>
             <element signature="e#24#34#0" expanded="true" />
           </folding>
@@ -728,8 +724,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="689">
-          <caret line="97" lean-forward="true" selection-start-line="97" selection-end-line="97" />
+        <state relative-caret-position="1649">
+          <caret line="97" selection-start-line="97" selection-end-line="97" />
         </state>
       </provider>
     </entry>
@@ -740,20 +736,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/auto_meteor_shower.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="893">
+          <caret line="142" column="8" selection-start-line="142" selection-start-column="8" selection-end-line="142" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/two_clicks_step2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
-          <caret line="57" column="115" lean-forward="true" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="115" />
+        <state relative-caret-position="828">
+          <caret line="57" column="115" selection-start-line="57" selection-start-column="4" selection-end-line="57" selection-end-column="115" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/auto_meteor_shower.py">
+    <entry file="file://$PROJECT_DIR$/excuteable/link.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="893">
-          <caret line="142" column="8" selection-start-line="142" selection-start-column="8" selection-end-line="142" selection-end-column="8" />
+        <state relative-caret-position="51">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
