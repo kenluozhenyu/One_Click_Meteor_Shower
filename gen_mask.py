@@ -5,7 +5,8 @@ import math
 import shutil
 import threading
 import multiprocessing
-from PIL import Image, ImageOps, ImageChops
+import numpy as np
+from PIL import Image, ImageOps, ImageChops, ImageDraw, ImageFont
 from keras_preprocessing.image import ImageDataGenerator
 
 import model
@@ -411,7 +412,9 @@ class Gen_mask:
                 # IMG_3119_size_(05472,03648)_0001_pos_(02650,01938)_(03700,02988)_mosaic_(002,002)_(001,001)_gray_256_mask_1050.png
                 # To:
                 # IMG_3119_size_(05472,03648)_0001_pos_(02650,01938)_(03700,02988)_gray_256_mask_1050.png
+                #
                 file_to_save = image_file[0: str_pos_mosaic] + image_file[str_pos_mosaic + 27: len(image_file)]
+                # file_to_save = image_file[0: str_pos_mosaic] + "_gray_mask"
                 file_to_save = os.path.join(save_dir, file_to_save)
                 img_mosaic.save(file_to_save, 'PNG')
 
@@ -542,7 +545,8 @@ class Gen_mask:
     #    function
     # When using multi-thread mode, the "selected_image_list" parameter is to
     # be used. It specify a sub-set of the image list to be handled by a thread.
-    def extend_extracted_objects_to_original_photo_size(self, file_dir, save_dir, selected_image_list=[], verbose=1):
+    def extend_extracted_objects_to_original_photo_size(self, file_dir, save_dir, label_save_dir,
+                                                        selected_image_list=[], verbose=1):
         if len(selected_image_list) == 0:
             print("\nExtending the extracted objects back to original photo size ...")
             # No file list specified
@@ -555,8 +559,7 @@ class Gen_mask:
         else:
             image_list = selected_image_list
 
-        if not os.path.exists(save_dir):
-            os.mkdir(save_dir)
+        ttFont = ImageFont.truetype("arial.ttf", 16)
 
         for image_file in image_list:
             if verbose:
@@ -593,21 +596,80 @@ class Gen_mask:
             # extend_img = cv2.cvtColor(extend_img, cv2.COLOR_BGR2GRAY)
 
             # Remove the position info and other info from the file name
-            # Leave the detection # info (the 0003 in this file name example:
-            #     ER4A3109_size(05437,03625)_0001_pos_(02194,02421)_(02834,03061).JPG
+            # Leave the detection # info (the 0001 in this file name example:
+            #     ER4A3109_r_size_(05760,03840)_0001_pos_(02301,02327)_(02941,02967)_gray_256_mask_640_transparent.png
             #
-            string_to_match = '_pos_('
+            # 2020-7-4: Decided to leave the position info in he file name.
+            #           Because we may want to have a copy to print the file
+            #           label near the meteor object.
+
+            # string_to_match = '_pos_('
+            string_to_match = '_gray_256_mask_'
+
             str_pos = image_file.find(string_to_match)
 
             if str_pos > -1:
                 filename_no_ext = filename_no_ext[0:str_pos]
 
-            file_to_save = filename_no_ext + file_ext
-            file_to_save = os.path.join(save_dir, file_to_save)
+            filename_to_save = filename_no_ext + file_ext
+            file_to_save = os.path.join(save_dir, filename_to_save)
 
             cv2.imwrite(file_to_save, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 3])
 
-    def extend_extracted_objects_to_original_photo_size_by_multi_threading(self, file_dir, save_dir, verbose=1):
+            # 2020-7-4:
+            # Add the file name as the label to the image, and save to another location
+            string_to_match = '_center_('
+            str_pos = image_file.find(string_to_match)
+
+            if str_pos > -1:
+                str_x_c = image_file[str_pos + 9:str_pos + 14]
+                str_y_c = image_file[str_pos + 15:str_pos + 20]
+
+                x_c = int(str_x_c)
+                y_c = int(str_y_c) - 16
+            else:
+                x_c = 0
+                y_c = 0
+
+            # Get the short file name.
+            # The file name would be:
+            #     ER4A3109_r_size_(05760,03840)_0001_pos_(02301,02327)_(02941,02967).png
+            #
+            # The short file name would be:
+            #     ER4A3109_r_0001
+            label_name = image_file
+            string_to_match = '_pos_('
+            str_pos = image_file.find(string_to_match)
+
+            if str_pos > -1:
+                label_name = image_file[0:str_pos - 24] + image_file[str_pos - 5:str_pos]
+
+            im_rgb = cv2.cvtColor(extend_img, cv2.COLOR_BGRA2RGBA)
+            pil_im = Image.fromarray(im_rgb)
+
+            draw = ImageDraw.Draw(pil_im)
+            draw.text((x_c, y_c), label_name, fill=(0, 255, 255), font=ttFont)
+
+            # b, g, r = pil_im.split()
+            # pil_im = Image.merge("RGB", (r, g, b))
+
+            '''
+            cv2.putText(extend_img, label_name,
+                        (x_c, y_c),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=3,
+                        color=(0, 255, 255),
+                        lineType=2)
+            '''
+            file_to_save = os.path.join(label_save_dir, filename_to_save)
+
+            pil_im.save(file_to_save, "PNG")
+            # cv2_im_processed = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)
+            # cv2.imwrite(file_to_save, cv2_im_processed, [cv2.IMWRITE_PNG_COMPRESSION, 3])
+        # end for loop
+
+    def extend_extracted_objects_to_original_photo_size_by_multi_threading(self, file_dir, save_dir, label_save_dir,
+                                                                           verbose=1):
         print("\nExtending the extracted objects back to original photo size ...")
         included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',
                                'TIFF']
@@ -615,10 +677,17 @@ class Gen_mask:
         if not os.path.exists(save_dir):
             os.mkdir(save_dir)
 
+        if not os.path.exists(label_save_dir):
+            os.mkdir(label_save_dir)
+
         image_list = [fn for fn in os.listdir(file_dir)
                       if any(fn.endswith(ext) for ext in included_extensions)]
 
         CPU_count = multiprocessing.cpu_count()
+
+        # Add some restriction to avoid out of memory
+        if CPU_count > 24:
+            CPU_count = 24
 
         num_image_list = len(image_list)
 
@@ -659,7 +728,7 @@ class Gen_mask:
             # print(subset_image_list)
 
             thread_set.append(threading.Thread(target=self.extend_extracted_objects_to_original_photo_size,
-                                               args=(file_dir, save_dir, subset_image_list, verbose)))
+                                               args=(file_dir, save_dir, label_save_dir, subset_image_list, verbose)))
 
         # thread_set = [myThread(i + 1, "Thread-{0:03d}".format(i + 1), start_from, num) for i in range(NUM_OF_THREADS)]
 
@@ -672,8 +741,76 @@ class Gen_mask:
 
         print("\nMulti-thread process done !")
 
-    def combine_meteor_images_to_one(self, meteor_dir, save_dir, verbose):
-        print("\nCombining the meteor images to one ...")
+    # Sometimes the final combined image would still contain some objects we don't want.
+    # Like satellites (escaped from recognition), or a few meteors we don't want.
+    #
+    # Print the file label near to the object could help to easily identify which file
+    # we want to exclude from the final combination
+    #
+    # 2020-7-4: This is no need to use now. The function is combined to
+    #           self.extend_extracted_objects_to_original_photo_size
+    def print_filename_label_to_individual_final_image(self, file_dir, save_dir, verbose=1):
+        print("\nGenerating files with label ...")
+        included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',
+                               'TIFF']
+
+        if not os.path.exists(save_dir):
+            os.mkdir(save_dir)
+
+        image_list = [fn for fn in os.listdir(file_dir)
+                      if any(fn.endswith(ext) for ext in included_extensions)]
+
+        ttFont = ImageFont.truetype("arial.ttf", 16)
+
+        for image_file in image_list:
+            if verbose:
+                print("... Processing {} ...".format(image_file))
+
+            filename_w_path = os.path.join(file_dir, image_file)
+
+            # x1, y1, x2, y2 = self.get_image_pos_from_file_name(image_file)
+            # x0 = int((x1 + x2) / 2)
+            # y0 = int((y1 + y2) / 2) - 20
+
+            string_to_match = '_center_('
+            str_pos = image_file.find(string_to_match)
+
+            if str_pos > -1:
+                str_x_c = image_file[str_pos + 9:str_pos + 14]
+                str_y_c = image_file[str_pos + 15:str_pos + 20]
+
+                x_c = int(str_x_c)
+                y_c = int(str_y_c) - 16
+            else:
+                x_c = 0
+                y_c = 0
+
+            im = Image.open(filename_w_path)
+            draw = ImageDraw.Draw(im)
+
+            # Get the short file name.
+            # The file name would be:
+            #     ER4A3109_r_size_(05760,03840)_0001_pos_(02301,02327)_(02941,02967).png
+            #
+            # The short file name would be:
+            #     ER4A3109_r_size_0001
+
+            label_name = image_file
+
+            string_to_match = '_pos_('
+            str_pos = image_file.find(string_to_match)
+
+            if str_pos > -1:
+                label_name = image_file[0:str_pos-24] + image_file[str_pos-5:str_pos]
+
+            draw.text((x_c, y_c), label_name, fill=(0, 255, 255), font=ttFont)
+
+            file_to_save = os.path.join(save_dir, image_file)
+            im.save(file_to_save, "PNG")
+        # end for loop
+
+    def combine_meteor_images_to_one(self, meteor_dir, save_dir, specified_filename='final.png', verbose=1):
+        print("\nCombining the meteor images to {} ...".format(specified_filename))
         included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
 
         if not os.path.exists(save_dir):
@@ -704,58 +841,8 @@ class Gen_mask:
                     combined_img = Image.alpha_composite(combined_img, img)
             i += 1
 
-        file_to_save = 'final.png'
+        # file_to_save = 'final.png'
+        file_to_save = specified_filename
         file_to_save = os.path.join(save_dir, file_to_save)
 
         combined_img.save(file_to_save, 'PNG')
-
-'''
-if __name__ == "__main__":
-    # original_dir = 'data/meteor/meteor-data/meteor-detection/original_images/'
-
-    original_dir = 'F:/meteor-one-click-2018-08-milkyway'
-
-    # Below sub-folders will be created by the program
-    process_dir = os.path.join(original_dir, 'process')
-
-    # Need to have below sub-folders
-    # The '2_cropped' is hardcoded, don't change
-    # Other sub-folder names in below can be changed
-    extracted_dir = os.path.join(process_dir, '02_cropped')
-
-    mosaic_dir = os.path.join(process_dir, '03_mosaic')
-    gray_256_dir = os.path.join(process_dir, '04_gray_256')
-    mask_256_dir = os.path.join(process_dir, '05_mask_256')
-    mask_resize_back_dir = os.path.join(process_dir, '06_mask_resize_back')
-    mosaic_merge_back_dir = os.path.join(process_dir, '07_mosaic_merged_back')
-
-    # mask_extended_back_dir = os.path.join(process_dir, '6_mask_extended_back')
-    object_extracted_dir = os.path.join(process_dir, '08_object_extracted')
-
-    FINAL_dir = os.path.join(process_dir, '09_FINAL')
-    FINAL_combined_dir = os.path.join(process_dir, '10_FINAL_combined')
-
-    my_gen_mask = Gen_mask()
-
-    my_gen_mask.convert_cropped_image_folder_to_mosaic_for_big_files(extracted_dir, mosaic_dir)
-    my_gen_mask.convert_image_folder_to_gray_256(mosaic_dir, gray_256_dir)
-    my_gen_mask.gen_meteor_mask_from_folder(gray_256_dir, mask_256_dir)
-    my_gen_mask.resize_mask_to_original_cropped_size(mask_256_dir, mask_resize_back_dir)
-    my_gen_mask.mosaic_mask_files_merge_back(mask_resize_back_dir, mosaic_merge_back_dir)
-    my_gen_mask.extract_meteor_from_cropped_folder_with_mask(extracted_dir,
-                                                             mosaic_merge_back_dir,
-                                                             object_extracted_dir,
-                                                             verbose=1)
-
-    # my_gen_mask.extract_meteor_from_photo_folder_with_mask(original_dir, mask_extended_back_dir, FINAL_dir, verbose=1)
-
-    my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
-    my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, verbose=1)
-
-    # my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, verbose=1)
-
-    # cropped_photo_file = 'F:/test/IMG_3119_size_(05472,03648)_0001_pos_(02650,01938)_(03700,02988).JPG'
-    # mask_file = 'F:/test/IMG_3119_size_(05472,03648)_0001_pos_(02650,01938)_(03700,02988)_gray_256_mask_1050.png'
-    # save_file = 'F:/test/IMG_3119_extracted_v2.png'
-    # my_gen_mask.extract_meteor_from_file_with_mask(cropped_photo_file, mask_file, save_file)
-'''

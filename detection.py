@@ -691,6 +691,13 @@ class MeteorDetector:
             x2 = line[2]
             y2 = line[3]
 
+            # 2020-7-4
+            # Also store the center coordinator of the detection line
+            # in the file name.
+
+            x_c = int((x1 + x2) / 2)
+            y_c = int((y1 + y2) / 2)
+
             # cv2.line(draw_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
             box_x1, box_y1, box_x2, box_y2 = \
                 self.get_box_coordinate_from_detected_line(x1, y1, x2, y2, img_width, img_height,
@@ -699,13 +706,13 @@ class MeteorDetector:
             # The "True" value in the end is for next step usage
             # When two boxes are merged, tag one as False, indicating
             # it is to be removed
-            box_list.append([box_x1, box_y1, box_x2, box_y2, True])
+            box_list.append([box_x1, box_y1, box_x2, box_y2, x_c, y_c, True])
 
         combined_box_list = []
 
         for i in range(len(box_list)):
 
-            tag = box_list[i][4]
+            tag = box_list[i][6]
             if not tag:
                 # This has been merged, skip it
                 continue
@@ -716,7 +723,7 @@ class MeteorDetector:
             # be another problem. The image area could be quite big,
             # and could include both landscape objects and meteor objects.
             for j in range(i + 1, len(box_list)):
-                tag = box_list[j][4]
+                tag = box_list[j][6]
                 if not tag:
                     # This has been merged, skip it
                     continue
@@ -776,15 +783,21 @@ class MeteorDetector:
                     box_list[i][2] = merged_x2
                     box_list[i][3] = merged_y2
 
+                    # 2020-7-4
+                    # No update to the line center coordinator at this time
+                    # See what result would be to decide how to handle that
+                    # later on.
+
                     box_list[j][0] = 0
                     box_list[j][1] = 0
                     box_list[j][2] = 0
                     box_list[j][3] = 0
-                    box_list[j][4] = False
+                    box_list[j][6] = False
 
             # End of the j loop
             # One entry in the i for loop has completely merged with others
-            combined_box_list.append([box_list[i][0], box_list[i][1], box_list[i][2], box_list[i][3]])
+            combined_box_list.append([box_list[i][0], box_list[i][1], box_list[i][2], box_list[i][3],
+                                     box_list[i][4], box_list[i][5]])
 
         return combined_box_list
 
@@ -940,6 +953,11 @@ class MeteorDetector:
             box_x2 = box[2]
             box_y2 = box[3]
 
+            # 2020-7-4
+            # Also store the line center coordinate to the file name
+            line_x_center = box[4]
+            line_y_center = box[5]
+
             crop_img = original_img[box_y1:box_y2, box_x1:box_x2]
 
             i += 1
@@ -947,8 +965,8 @@ class MeteorDetector:
             # Let the file name to contain the position info
             # So as to know where it is from the original image
             file_to_save = filename_no_ext +\
-                           "_size_({:05d},{:05d})_{:04d}_pos_({:05d},{:05d})_({:05d},{:05d})".\
-                               format(width, height, i, box_x1, box_y1, box_x2, box_y2) + \
+                           "_size_({:05d},{:05d})_{:04d}_pos_({:05d},{:05d})_({:05d},{:05d})_center_({:05d},{:05d})".\
+                               format(width, height, i, box_x1, box_y1, box_x2, box_y2, line_x_center, line_y_center) +\
                            file_ext
 
             file_to_save = os.path.join(save_dir, file_to_save)
@@ -1245,8 +1263,8 @@ class MeteorDetector:
         # The classification process will use "predict_generator", which
         # requires the images be put to a sub-folder of this specified folder
         extracted_file_dir = os.path.join(extracted_file_dir, 'un-classified')
-        if not os.path.exists(extracted_file_dir):
-            os.mkdir(extracted_file_dir)
+        # if not os.path.exists(extracted_file_dir):
+        #     os.mkdir(extracted_file_dir)
 
         num_of_images = len(image_list)
         for index, image_file in enumerate(image_list):
@@ -1255,7 +1273,10 @@ class MeteorDetector:
                 break
 
             if verbose:
-                print("\n{} is processing image {} ...".format(self.Thread_Name, image_file))
+                print("\n{} is processing image {} ...  {} of {} for this thread".format(self.Thread_Name,
+                                                                                         image_file,
+                                                                                         index+1,
+                                                                                         num_of_images-1))
 
             if subtraction and num_of_images > 1:
                 # For star-aligned images, doing a subtraction will easily remove
@@ -1347,6 +1368,10 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
 
     # Directory to save the extracted small images
     extracted_file_dir = os.path.join(save_dir, '02_cropped')
+    if not os.path.exists(extracted_file_dir):
+        os.mkdir(extracted_file_dir)
+
+    extracted_file_dir = os.path.join(extracted_file_dir, 'un-classified')
     if not os.path.exists(extracted_file_dir):
         os.mkdir(extracted_file_dir)
 

@@ -42,6 +42,7 @@ if __name__ == "__main__":
     object_extracted_dir = os.path.join(process_dir, '09_object_extracted')
 
     FINAL_dir = os.path.join(process_dir, '10_FINAL')
+    FINAL_w_label_dir = os.path.join(process_dir, '10_FINAL_w_label')
     FINAL_combined_dir = os.path.join(process_dir, '11_FINAL_combined')
 
     my_gen_mask.convert_cropped_image_folder_to_mosaic_for_big_files(keep_dir, mosaic_dir)
@@ -53,9 +54,11 @@ if __name__ == "__main__":
                                                              mosaic_merge_back_dir,
                                                              object_extracted_dir,
                                                              verbose=1)
-
     # my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
-    my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir, FINAL_dir)
-    my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, verbose=1)
-
+    my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir,
+                                                                                   FINAL_dir,
+                                                                                   FINAL_w_label_dir)
+    # my_gen_mask.print_filename_label_to_individual_final_image(FINAL_dir, FINAL_w_label_dir)
+    my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, 'final.png', verbose=1)
+    my_gen_mask.combine_meteor_images_to_one(FINAL_w_label_dir, FINAL_combined_dir, 'final_w_label.png', verbose=1)
     print("\nProcess finished!")

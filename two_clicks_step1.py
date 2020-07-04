@@ -41,26 +41,12 @@ if __name__ == "__main__":
     removed_dir = os.path.join(filtered_dir, 'removed')
 
     if equatorial_mount_option == 'Y':
-        '''
-        meteor_detector.detect_n_extract_meteor_from_folder(original_dir,
-                                                            process_dir,
-                                                            subtraction=True,
-                                                            equatorial_mount=True,
-                                                            verbose=1)
-        '''
         detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
                                                                            process_dir,
                                                                            subtraction=True,
                                                                            equatorial_mount=True,
                                                                            verbose=1)
     else:
-        '''
-        meteor_detector.detect_n_extract_meteor_from_folder(original_dir,
-                                                            process_dir,
-                                                            subtraction=True,
-                                                            equatorial_mount=False,
-                                                            verbose=1)
-        '''
         detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
                                                                            process_dir,
                                                                            subtraction=True,
