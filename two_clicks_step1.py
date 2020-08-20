@@ -40,18 +40,15 @@ if __name__ == "__main__":
     # not_sure_dir = os.path.join(filtered_dir, 'not-sure')
     removed_dir = os.path.join(filtered_dir, 'removed')
 
+    is_equatorial_mount = False
     if equatorial_mount_option == 'Y':
-        detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
-                                                                           process_dir,
-                                                                           subtraction=True,
-                                                                           equatorial_mount=True,
-                                                                           verbose=1)
-    else:
-        detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
-                                                                           process_dir,
-                                                                           subtraction=True,
-                                                                           equatorial_mount=False,
-                                                                           verbose=1)
+        is_equatorial_mount = True
+
+    detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
+                                                                       process_dir,
+                                                                       subtraction=True,
+                                                                       equatorial_mount=is_equatorial_mount,
+                                                                       verbose=1)
 
     # meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, not_sure_dir, removed_dir)
     # meteor_detector.filter_possible_not_meteor_objects(extracted_dir, keep_dir, removed_dir)

@@ -686,8 +686,10 @@ class Gen_mask:
         CPU_count = multiprocessing.cpu_count()
 
         # Add some restriction to avoid out of memory
-        if CPU_count > 24:
-            CPU_count = 24
+        # if CPU_count > 8:
+        #     CPU_count = 8
+        if CPU_count > settings.MAX_CPU_FOR_MASK_EXTRACTION:
+            CPU_count = settings.MAX_CPU_FOR_MASK_EXTRACTION
 
         num_image_list = len(image_list)
 

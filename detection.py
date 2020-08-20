@@ -1219,6 +1219,7 @@ class MeteorDetector:
     # The "selected_image_list" will normally contain one more file, which
     # is the file in the next sub-list for the next thread.
     #
+    # Update 2020-8-20: This parameter is obsolete
     # When using multi-thread method, parameter "last_image_needs_detection"
     # will be normally "False" except for the last thread that processes the
     # last part of the image list.
@@ -1228,7 +1229,7 @@ class MeteorDetector:
                                             subtraction=True,
                                             equatorial_mount=False,
                                             selected_image_list=[],
-                                            last_image_needs_detection=False,
+                                            # last_image_needs_detection=False,
                                             verbose=1):
         # image_list = fnmatch.filter(os.listdir(file_dir), '*.py')
 
@@ -1269,14 +1270,18 @@ class MeteorDetector:
         num_of_images = len(image_list)
         for index, image_file in enumerate(image_list):
             # The last one in the sub-set
-            if (index == num_of_images - 1) and (not last_image_needs_detection):
-                break
+
+            # if (index == num_of_images - 1) and (not last_image_needs_detection):
+            #     break
 
             if verbose:
+                # num_of_images_to_be_processed = num_of_images - 1
+                # if last_image_needs_detection:
+                #     num_of_images_to_be_processed = num_of_images
                 print("\n{} is processing image {} ...  {} of {} for this thread".format(self.Thread_Name,
                                                                                          image_file,
                                                                                          index+1,
-                                                                                         num_of_images-1))
+                                                                                         num_of_images - 1))
 
             if subtraction and num_of_images > 1:
                 # For star-aligned images, doing a subtraction will easily remove
@@ -1332,7 +1337,7 @@ class Detection_Thread(threading.Thread):
         self.subtraction = subtraction
         self.equatorial_mount = equatorial_mount
         self.image_list = selected_image_list
-        self.last_image_needs_detection = last_image_needs_detection
+        # self.last_image_needs_detection = last_image_needs_detection
         self.verbose = verbose
 
     def run(self):
@@ -1343,7 +1348,7 @@ class Detection_Thread(threading.Thread):
                                                             self.subtraction,
                                                             self.equatorial_mount,
                                                             self.image_list,
-                                                            self.last_image_needs_detection,
+                                                            # self.last_image_needs_detection,
                                                             verbose=1)
         print("\nThread {} processing done ! \n".format(self.name))
 
@@ -1380,12 +1385,25 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
     # To avoid resource outage
     # 24 cores would consume about 12G memory on 5D Make III images
     # 12 cores would consume about 8G memory on 5D Make III images
-    if CPU_count > 24:
-        CPU_count = 24
+    if CPU_count > settings.MAX_CPU_FOR_DETECTION:
+        CPU_count = settings.MAX_CPU_FOR_DETECTION
 
     num_image_list = len(image_list)
 
     size_per_sublist = math.ceil(num_image_list / CPU_count)
+
+    # As we are detecting the meteor objects by subtracting two images,
+    # we need to have at least two images in the queue.
+    # And for overhead consideration, make this number to be 3
+    if size_per_sublist < 3:
+        size_per_sublist = 3
+
+    # To ensure the thread number <= num_image_list/size_per_sublist
+    # And the last thread should have at least 3 items to process
+    CPU_count = int(num_image_list/size_per_sublist)
+    if num_image_list - size_per_sublist * CPU_count >= 3:
+        CPU_count += 1
+
     print('\nTotally {} images to be processed by {} CPU cores'.format(num_image_list, CPU_count))
     print("Each core to handle {} images".format(size_per_sublist))
 
@@ -1411,8 +1429,9 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
 
         num = size_per_sublist
 
-        last_image_needs_detection = False
+        # last_image_needs_detection = False
 
+        '''
         if start_from + num > num_image_list:
             # (num_image_list-1) is the maximum index of the list
             num = (num_image_list - 1) - start_from + 1
@@ -1423,6 +1442,26 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
             subset_image_list = image_list[start_from:start_from + num]
         else:
             last_image_needs_detection = False
+            # Adding one more image in the list
+            # The last one doesn't need to be processed
+            # It will be processed in another thread (as the fist one)
+            subset_image_list = image_list[start_from:start_from + num + 1]
+        '''
+
+        if i == CPU_count - 1:
+            # The last thread
+            # All items left should be added to this subset
+            num = (num_image_list - 1) - start_from + 1
+
+            # For the last sub-set, the last_image_needs_detection should be TRUE
+            # last_image_needs_detection = True
+            subset_image_list = image_list[start_from:start_from + num]
+
+            # In order to process the last image, we have to add one previous
+            # image from the list
+            subset_image_list.append(image_list[start_from + num - 1])
+        else:
+            # last_image_needs_detection = False
             # Adding one more image in the list
             # The last one doesn't need to be processed
             # It will be processed in another thread (as the fist one)
@@ -1439,7 +1478,7 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
                                            subtraction,
                                            equatorial_mount,
                                            subset_image_list,
-                                           last_image_needs_detection=last_image_needs_detection,
+                                           # last_image_needs_detection=last_image_needs_detection,
                                            verbose=verbose))
     for thread_process in thread_set:
         thread_process.start()

@@ -6,6 +6,7 @@
       <change beforePath="$PROJECT_DIR$/auto_meteor_shower.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto_meteor_shower.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_mask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/two_clicks_step1.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/two_clicks_step2.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step2.py" afterDir="false" />
     </list>
@@ -167,7 +168,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/two_clicks_step1.py" />
-      <option name="PARAMETERS" value="Y F:\meteor-one-click-test-original-images\star-aligned" />
+      <option name="PARAMETERS" value="Y F:\Wescom\8-12" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -188,7 +189,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/two_clicks_step2.py" />
-      <option name="PARAMETERS" value="F:\meteor-one-click-test-original-images\star-aligned" />
+      <option name="PARAMETERS" value="F:\Wescom\8-12" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -236,30 +237,30 @@
     </todo-panel>
   </component>
   <component name="WindowStateProjectService">
-    <state x="610" y="313" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1593856237670">
+    <state x="610" y="313" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1597939416205">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="610" y="313" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1593856237670" />
+    <state x="610" y="313" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597939416205" />
     <state x="746" y="308" key="FileChooserDialogImpl" timestamp="1590587702243">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="746" y="308" key="FileChooserDialogImpl/2560.0.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1590587702243" />
-    <state width="2027" height="404" key="GridCell.Tab.0.bottom" timestamp="1593873467287">
+    <state width="2027" height="371" key="GridCell.Tab.0.bottom" timestamp="1597940036135">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="404" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1593873467287" />
-    <state width="2027" height="404" key="GridCell.Tab.0.center" timestamp="1593873467287">
+    <state width="2027" height="371" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036135" />
+    <state width="2027" height="371" key="GridCell.Tab.0.center" timestamp="1597940036134">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="404" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1593873467287" />
-    <state width="2027" height="404" key="GridCell.Tab.0.left" timestamp="1593873467287">
+    <state width="2027" height="371" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036134" />
+    <state width="2027" height="371" key="GridCell.Tab.0.left" timestamp="1597940036134">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="404" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1593873467287" />
-    <state width="2027" height="404" key="GridCell.Tab.0.right" timestamp="1593873467287">
+    <state width="2027" height="371" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036134" />
+    <state width="2027" height="371" key="GridCell.Tab.0.right" timestamp="1597940036134">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="404" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1593873467287" />
+    <state width="2027" height="371" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036134" />
     <state x="760" y="466" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590587724914">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
