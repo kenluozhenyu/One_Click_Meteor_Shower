@@ -3,12 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6e6eccdc-d9e2-4746-b0e0-409b107b926a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto_meteor_shower.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto_meteor_shower.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_mask.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/two_clicks_step1.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/two_clicks_step2.py" beforeDir="false" afterPath="$PROJECT_DIR$/two_clicks_step2.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,11 +194,11 @@
     </configuration>
     <list>
       <item itemvalue="Python.auto_meteor_shower" />
-      <item itemvalue="Python.two_clicks_step2" />
       <item itemvalue="Python.detection" />
       <item itemvalue="Python.detection_test" />
       <item itemvalue="Python.gen_mask" />
       <item itemvalue="Python.two_clicks_step1" />
+      <item itemvalue="Python.two_clicks_step2" />
     </list>
     <recent_temporary>
       <list>
@@ -214,6 +209,7 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -245,22 +241,22 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="746" y="308" key="FileChooserDialogImpl/2560.0.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1590587702243" />
-    <state width="2027" height="371" key="GridCell.Tab.0.bottom" timestamp="1597940036135">
+    <state width="1716" height="227" key="GridCell.Tab.0.bottom" timestamp="1597941046206">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="371" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036135" />
-    <state width="2027" height="371" key="GridCell.Tab.0.center" timestamp="1597940036134">
+    <state width="1716" height="227" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597941046206" />
+    <state width="1716" height="227" key="GridCell.Tab.0.center" timestamp="1597941046206">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="371" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036134" />
-    <state width="2027" height="371" key="GridCell.Tab.0.left" timestamp="1597940036134">
+    <state width="1716" height="227" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597941046206" />
+    <state width="1716" height="227" key="GridCell.Tab.0.left" timestamp="1597941046206">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="371" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036134" />
-    <state width="2027" height="371" key="GridCell.Tab.0.right" timestamp="1597940036134">
+    <state width="1716" height="227" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597941046206" />
+    <state width="1716" height="227" key="GridCell.Tab.0.right" timestamp="1597941046206">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="371" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597940036134" />
+    <state width="1716" height="227" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1597941046206" />
     <state x="760" y="466" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590587724914">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>

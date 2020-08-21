@@ -559,7 +559,10 @@ class Gen_mask:
         else:
             image_list = selected_image_list
 
-        ttFont = ImageFont.truetype("arial.ttf", 16)
+        try:
+            ttFont = ImageFont.truetype("arial.ttf", 16)
+        except Exception:
+            ttFont = ImageFont.load_default()
 
         for image_file in image_list:
             if verbose:
@@ -762,7 +765,10 @@ class Gen_mask:
         image_list = [fn for fn in os.listdir(file_dir)
                       if any(fn.endswith(ext) for ext in included_extensions)]
 
-        ttFont = ImageFont.truetype("arial.ttf", 16)
+        try:
+            ttFont = ImageFont.truetype("arial.ttf", 16)
+        except Exception:
+            ttFont = ImageFont.load_default()
 
         for image_file in image_list:
             if verbose:
@@ -822,6 +828,7 @@ class Gen_mask:
                        if any(fn.endswith(ext) for ext in included_extensions)]
 
         if len(meteor_list) == 0:
+            print("No image file in folder {}".format(meteor_dir))
             return
 
         meteor_file = meteor_list[0]
@@ -833,6 +840,7 @@ class Gen_mask:
         i = 0
 
         for meteor_file in meteor_list:
+            # The first image had been opened before the for-loop
             if i > 0:
                 filename_w_path = os.path.join(meteor_dir, meteor_file)
 
@@ -843,7 +851,6 @@ class Gen_mask:
                     combined_img = Image.alpha_composite(combined_img, img)
             i += 1
 
-        # file_to_save = 'final.png'
         file_to_save = specified_filename
         file_to_save = os.path.join(save_dir, file_to_save)
 
