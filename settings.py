@@ -88,7 +88,7 @@ LINE_DISTANCE_FOR_SATELLITE_THRESHOLD = 300
 # For multi-thread processing
 # To avoid memory exhaustion sometimes we need to control the maximum core #
 MAX_CPU_FOR_DETECTION = 24
-MAX_CPU_FOR_MASK_EXTRACTION = 8
+MAX_CPU_FOR_MASK_EXTRACTION = 6
 
 # =============================================================================
 # The Neural Network

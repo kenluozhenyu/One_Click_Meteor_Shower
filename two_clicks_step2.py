@@ -58,6 +58,7 @@ if __name__ == "__main__":
     my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir,
                                                                                    FINAL_dir,
                                                                                    FINAL_w_label_dir)    
+
     my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, 'final.png', verbose=1)
     my_gen_mask.combine_meteor_images_to_one(FINAL_w_label_dir, FINAL_combined_dir, 'final_w_label.png', verbose=1)
     print("\nProcess finished!")
