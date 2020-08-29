@@ -8,7 +8,7 @@ import gen_mask
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if len(argv) == 0:
-        print("Usage: one_click_meteor_shower.py <folder name>")
+        print("Usage: 3_click_meteor_shower.py <folder name>")
         sys.exit(1)
 
     original_dir = argv[0]
@@ -50,15 +50,12 @@ if __name__ == "__main__":
     my_gen_mask.gen_meteor_mask_from_folder(gray_256_dir, mask_256_dir)
     my_gen_mask.resize_mask_to_original_cropped_size(mask_256_dir, mask_resize_back_dir)
     my_gen_mask.mosaic_mask_files_merge_back(mask_resize_back_dir, mosaic_merge_back_dir)
-    my_gen_mask.extract_meteor_from_cropped_folder_with_mask(keep_dir,
-                                                             mosaic_merge_back_dir,
-                                                             object_extracted_dir,
-                                                             verbose=1)
 
-    my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir,
-                                                                                   FINAL_dir,
-                                                                                   FINAL_w_label_dir)    
-
-    my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, 'final.png', verbose=1)
-    my_gen_mask.combine_meteor_images_to_one(FINAL_w_label_dir, FINAL_combined_dir, 'final_w_label.png', verbose=1)
-    print("\nProcess finished!")
+    print("\n======================================================================================================")
+    print("\nMask generation finished.")
+    print("\nYou may go to the '08_mosaic_merged_back' folder, to double check the generated mask quality.")
+    print("\nYou could use other photo processing tool to make some improvement on the mask file. To ensure")
+    print("it can fully cover the meteor object, or remove other noises.")
+    print("\nAfter this checking is done, you can proceed to use this command to extract the meteors out of")
+    print("the background:")
+    print("    "'3_clicks_step3 {}'"".format(original_dir))

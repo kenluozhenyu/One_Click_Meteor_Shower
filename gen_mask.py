@@ -433,7 +433,7 @@ class Gen_mask:
                 shutil.copyfile(orig_file, file_to_save)
         # end of for-loop
 
-    def extract_meteor_from_file_with_mask(self, cropped_photo_file, mask_file, save_file):
+    def extract_meteor_from_cropped_file_with_mask(self, cropped_photo_file, mask_file, save_file):
         cropped_img = Image.open(cropped_photo_file)
 
         # Need to be processed in color
@@ -447,6 +447,7 @@ class Gen_mask:
         datas = img_extract.getdata()
 
         newData = []
+        rgb_threshold = settings.EXTRACT_RGB_VALUE_THRESHOLD
         for item in datas:
             # if item[0] == 0 and item[1] == 0 and item[2] == 0:
 
@@ -460,7 +461,9 @@ class Gen_mask:
             # if item[0] < 30 and item[1] < 30 and item[2] < 30:
             # if item[0] < 80 and item[1] < 80 and item[2] < 80:
             #
-            if item[0] < 72 and item[1] < 72 and item[2] < 72:
+            # if item[0] < 72 and item[1] < 72 and item[2] < 72:
+            # if item[0] < 30 and item[1] < 30 and item[2] < 30:
+            if item[0] < rgb_threshold and item[1] < rgb_threshold and item[2] < rgb_threshold:
                 newData.append((255, 255, 255, 0))
             else:
                 newData.append(item)
@@ -472,7 +475,7 @@ class Gen_mask:
         # file_to_save = os.path.join(save_dir, file_to_save)
         img_extract.save(save_file, "PNG")
 
-    # def extract_meteor_from_photo_file_with_mask_file(self, photo_dir, mask_dir, save_dir):
+    # def extract_meteor_from_cropped_folder_with_mask(self, photo_dir, mask_dir, save_dir):
     # crop_dir: The cropped meteor objects photo folder. Normally it is the "2_extraction"
     # mask_dir : The folder contains mask files which have been extended back
     #            to original photo size
@@ -528,9 +531,103 @@ class Gen_mask:
                     if verbose:
                         print("... Extracting mask {} from cropped photo {} ...".format(mask_file, cropped_file_name))
 
-                    self.extract_meteor_from_file_with_mask(cropped_file_to_read,
-                                                            mask_file_to_read,
-                                                            file_to_save)
+                    self.extract_meteor_from_cropped_file_with_mask(cropped_file_to_read,
+                                                                    mask_file_to_read,
+                                                                    file_to_save)
+        # end for loop of the mask_list
+
+    def extract_meteor_from_original_file_with_mask(self, original_photo_file, mask_file, save_file):
+        original_img = Image.open(original_photo_file)
+
+        # Need to get the position info from the mask file name
+        x1, y1, x2, y2 = self.get_image_pos_from_file_name(mask_file)
+        # cropped_img = original_img[y1:y2, x1:x2]
+        cropped_img = original_img.crop((x1, y1, x2, y2))
+
+        # Need to be processed in color
+        # The mask image has been changed to 24-bit
+        # photo_img = ImageOps.grayscale(photo_img)
+
+        mask_img = Image.open(mask_file)
+
+        img_extract = ImageChops.multiply(cropped_img, mask_img)
+        img_extract = img_extract.convert("RGBA")
+        datas = img_extract.getdata()
+
+        newData = []
+        rgb_threshold = settings.EXTRACT_RGB_VALUE_THRESHOLD
+        for item in datas:
+            if item[0] < rgb_threshold and item[1] < rgb_threshold and item[2] < rgb_threshold:
+                newData.append((255, 255, 255, 0))
+            else:
+                newData.append(item)
+
+        img_extract.putdata(newData)
+
+        # To be in PNG format
+        # file_to_save = mask_filename_no_ext + '_transparent.png'
+        # file_to_save = os.path.join(save_dir, file_to_save)
+        img_extract.save(save_file, "PNG")
+
+    # We may allow some process on the cropped image, like improving the contrast to make it better
+    # to be process by the UNET network.
+    # In that case when doing the final extraction, we'd better to extract the meteor object from
+    # the original images.
+    def extract_meteor_from_original_folder_with_mask(self, original_dir, mask_dir, save_dir, verbose):
+        print("\nExtrating the meteor from cropped files...")
+        included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff', 'TIFF']
+
+        if not os.path.exists(save_dir):
+            os.mkdir(save_dir)
+
+        mask_list = [fn for fn in os.listdir(mask_dir)
+                     if any(fn.endswith(ext) for ext in included_extensions)]
+
+        original_list = [fn for fn in os.listdir(original_dir)
+                        if any(fn.endswith(ext) for ext in included_extensions)]
+
+        original_list_no_ext = [os.path.splitext(fn)[0] for fn in original_list]
+
+        for mask_file in mask_list:
+            mask_filename_no_ext, file_ext = os.path.splitext(mask_file)
+
+            # To be in PNG format
+            file_to_save = mask_filename_no_ext + '_transparent.png'
+            file_to_save = os.path.join(save_dir, file_to_save)
+
+            # Look for the corresponding original photo file
+            # The mask file name and the original image file name would be like these:
+            #     IMG_3077_size_(05472,03648)_0001_pos_(01567,00746)_(02207,01386)_gray_256_mask_640.png
+            #     IMG_3077_size_(05472,03648)_0001_pos_(01567,00746)_(02207,01386).JPG
+            # Need to match with the first sub-string before the "_size_("
+            # key word
+            #
+            # NO NO NO, no need to match the ext now. We'll use .png for those mask
+
+            string_to_match = '_size_('
+            str_pos = mask_filename_no_ext.find(string_to_match)
+
+            if str_pos > -1:
+                original_file_name_no_ext = mask_filename_no_ext[0:str_pos]
+                # photo_file_name += file_ext
+
+                # if photo_file_name in photo_list:
+                if original_file_name_no_ext in original_list_no_ext:
+                    list_index = original_list_no_ext.index(original_file_name_no_ext)
+
+                    # Seems no problem if the same file name with
+                    # different ext in the photo folder...
+                    original_file_name = original_list[list_index]
+
+                    original_file_to_read = os.path.join(original_dir, original_file_name)
+                    mask_file_to_read = os.path.join(mask_dir, mask_file)
+
+                    if verbose:
+                        print("... Extracting mask {} from original photo {} ...".format(mask_file, original_file_name))
+
+                    self.extract_meteor_from_original_file_with_mask(original_file_to_read,
+                                                                     mask_file_to_read,
+                                                                     file_to_save)
         # end for loop of the mask_list
 
     # This extends the XXX x XXX extracted meteor objects png file to the original big

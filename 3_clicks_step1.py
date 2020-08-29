@@ -7,7 +7,7 @@ import detection
 if __name__ == "__main__":
     argv = sys.argv[1:]
     if len(argv) == 0:
-        print("\nUsage: two_clicks_step1 <equatorial_mount option: Y/N> <folder name>")
+        print("\nUsage: 3_clicks_step1 <equatorial_mount option: Y/N> <folder name>")
         print("equatorial_mount option: Y (If the images were taken on equatorial mount)")
         print("                         N (Choose this for images taken on fixed tripod)")
         sys.exit(1)
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     equatorial_mount_option = argv[0]
     equatorial_mount_option = equatorial_mount_option.upper()
     if equatorial_mount_option != "Y" and equatorial_mount_option != "N":
-        print("\nUsage: two_clicks_step1 <equatorial_mount option: Y/N> <folder name>")
+        print("\nUsage: 3_clicks_step1 <equatorial_mount option: Y/N> <folder name>")
         print("equatorial_mount option: Y (If the images were taken on equatorial mount)")
         print("                         N (Choose this for images taken on fixed tripod)")
         sys.exit(1)
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     print("Or you could also move images from the 'removed' folders to the 'good' folder if")
     print("you think the images are actually meteors")
     print("\nAfter this is done, you can proceed to use this command to extract the meteors out of the background:")
-    print("    "'two_clicks_step2 {}'"".format(original_dir))
+    print("    "'3_clicks_step2 {}'"".format(original_dir))

@@ -85,10 +85,27 @@ LINE_VERTICAL_DISTANCE_FOR_SATELLITE_THRESHOLD = 12
 LINE_DISTANCE_FOR_SATELLITE_THRESHOLD = 300
 
 # =============================================================================
+# For meteor object extraction
+#
+# To avoid the dark boundary of the extracted meteor object is too thick.
+# If the specific pixel has RGB value lower than this threshold, it will
+# be replaced with transparent background.
+#
+# This value would need to be adjusted according to the brightness of the
+# background image
+#
+# - If the extracted meteor object got cut in the head/tail too much, try to
+#   lower this value (as long as the mask file covers the meteor body).
+# - If the extracted meteor object has the edge too thick/too dark compare
+#   to the star background image, try to increase this value (better to be
+#   within 80).
+EXTRACT_RGB_VALUE_THRESHOLD = 48
+
+# =============================================================================
 # For multi-thread processing
 # To avoid memory exhaustion sometimes we need to control the maximum core #
 MAX_CPU_FOR_DETECTION = 24
-MAX_CPU_FOR_MASK_EXTRACTION = 6
+MAX_CPU_FOR_MASK_EXTRACTION = 24
 
 # =============================================================================
 # The Neural Network

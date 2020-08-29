@@ -10,7 +10,8 @@ if __name__ == "__main__":
         print("\nUsage: auto_meteor_shower <operation> <equatorial_mount option: Y/N> <folder name>")
         print("operation: all (Do for both detection and extraction)")
         print("           detection  (This is the step 1. Detection only)")
-        print("           extraction (This is the step 2. Extraction only)")
+        print("           gen-mask   (This is the step 2. Generate the mask file only)")
+        print("           extraction (This is the step 3. Extraction only)")
         print("                      (The equatorial_mount option is not needed for the extraction-only operation)")
         print("\nequatorial_mount option: Y (If the images were taken on equatorial mount)")
         print("                         N (Choose this for images taken on fixed tripod)")
@@ -18,11 +19,12 @@ if __name__ == "__main__":
 
     do_option = argv[0]
     do_option = do_option.lower()
-    if do_option != "all" and do_option != "detection" and do_option != "extraction":
+    if do_option != "all" and do_option != "detection" and do_option != "gen-mask" and do_option != "extraction":
         print("\nUsage: auto_meteor_shower <operation> <equatorial_mount option: Y/N> <folder name>")
         print("operation: all (Do for both detection and extraction)")
         print("           detection  (This is the step 1. Detection only)")
-        print("           extraction (This is the step 2. Extraction only)")
+        print("           gen-mask   (This is the step 2. Generate the mask file only)")
+        print("           extraction (This is the step 3. Extraction only)")
         print("                      (The equatorial_mount option is not needed for the extraction-only operation)")
         print("\nequatorial_mount option: Y (If the images were taken on equatorial mount)")
         print("                         N (Choose this for images taken on fixed tripod)")
@@ -30,15 +32,16 @@ if __name__ == "__main__":
 
     equatorial_mount_option = "N"
 
-    if do_option == "all" or do_option != "detection":
+    if do_option == "all" or do_option == "detection":
         equatorial_mount_option = argv[1]
         equatorial_mount_option = equatorial_mount_option.upper()
         if equatorial_mount_option != "Y" and equatorial_mount_option != "N":
-            if do_option != "extraction":
+            if do_option != "gen-mask" or do_option != "extraction":
                 print("\nUsage: auto_meteor_shower <operation> <equatorial_mount option: Y/N> <folder name>")
                 print("operation: all (Do for both detection and extraction)")
                 print("           detection  (This is the step 1. Detection only)")
-                print("           extraction (This is the step 2. Extraction only)")
+                print("           gen-mask   (This is the step 2. Generate the mask file only)")
+                print("           extraction (This is the step 3. Extraction only)")
                 print("                      (The equatorial_mount option is not needed for the extraction-only operation)")
                 print("\nequatorial_mount option: Y (If the images were taken on equatorial mount)")
                 print("                         N (Choose this for images taken on fixed tripod)")
@@ -99,7 +102,7 @@ if __name__ == "__main__":
     if do_option == "detection":
         print(
             "\n======================================================================================================")
-        print("\nPossible objects extraction finished.")
+        print("\nPossible objects detection finished.")
         # print("You may go to the "'02_cropped'" folder to double check the detection objects.")
         print("\nYou may go to the "'03_filtered'" folder to double check the detection objects.")
         print("The 'good' sub-folder contains images are highly possible to be meteors")
@@ -109,22 +112,34 @@ if __name__ == "__main__":
         print("Or you could also move images from the 'removed' folders to the 'good' folder if")
         print("you think the images are actually meteors")
         print("\nAfter this is done, you can proceed to use this command to extract the meteors out of the background:")
-        print("    "'auto_meteor_shower extraction {}'"".format(original_dir))
+        print("    "'auto_meteor_shower gen-mask {}'"".format(original_dir))
 
-    if do_option == "all" or do_option == "extraction":
+    if do_option == "all" or do_option == "gen-mask":
         my_gen_mask.convert_cropped_image_folder_to_mosaic_for_big_files(keep_dir, mosaic_dir)
         my_gen_mask.convert_image_folder_to_gray_256(mosaic_dir, gray_256_dir)
         my_gen_mask.gen_meteor_mask_from_folder(gray_256_dir, mask_256_dir)
         my_gen_mask.resize_mask_to_original_cropped_size(mask_256_dir, mask_resize_back_dir)
         my_gen_mask.mosaic_mask_files_merge_back(mask_resize_back_dir, mosaic_merge_back_dir)
-        my_gen_mask.extract_meteor_from_cropped_folder_with_mask(keep_dir,
-                                                                 mosaic_merge_back_dir,
-                                                                 object_extracted_dir,
-                                                                 verbose=1)
-        # my_gen_mask.extend_extracted_objects_to_original_photo_size(object_extracted_dir, FINAL_dir)
+        my_gen_mask.extract_meteor_from_original_folder_with_mask(original_dir,
+                                                                  mosaic_merge_back_dir,
+                                                                  object_extracted_dir,
+                                                                  verbose=1)
+    if do_option == "gen-mask":
+        print(
+            "\n======================================================================================================")
+        print("\nMask generation finished.")
+        print("\nYou may go to the '08_mosaic_merged_back' folder, to double check the generated mask quality.")
+        print("\nYou could use other photo processing tool to make some improvement on the mask file. To ensure")
+        print("it can fully cover the meteor object, or remove other noises.")
+        print("\nAfter this checking is done, you can proceed to use this command to extract the meteors out of")
+        print("the background:")
+        print("    "'auto_meteor_shower extraction {}'"".format(original_dir))
+
+    if do_option == "all" or do_option == "extraction":
         my_gen_mask.extend_extracted_objects_to_original_photo_size_by_multi_threading(object_extracted_dir,
                                                                                        FINAL_dir,
                                                                                        FINAL_w_label_dir)
-        my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, verbose=1)
+        my_gen_mask.combine_meteor_images_to_one(FINAL_dir, FINAL_combined_dir, 'final.png', verbose=1)
+        my_gen_mask.combine_meteor_images_to_one(FINAL_w_label_dir, FINAL_combined_dir, 'final_w_label.png', verbose=1)
 
         print("\nProcess finished!")
