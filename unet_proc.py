@@ -5,6 +5,7 @@ import os
 import glob
 import skimage.io as io
 import skimage.transform as trans
+from skimage import img_as_ubyte
 
 Sky = [128, 128, 128]
 Building = [128, 0, 0]
@@ -148,4 +149,8 @@ def saveResult_V2(save_path, npyfile, file_list, flag_multi_class=False, num_cla
         # 8-bit image there could be problem
         # file_name = filename_no_ext + '_mask' + file_ext
         file_name = filename_no_ext + '_mask.png'
-        io.imsave(os.path.join(save_path, file_name), img)
+        # io.imsave(os.path.join(save_path, file_name), img)
+
+        # This is to suppress the warning message when converting the image
+        # to low contrast one
+        io.imsave(os.path.join(save_path, file_name), img_as_ubyte(img), check_contrast=False)

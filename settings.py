@@ -32,7 +32,8 @@ DETECTION_CROP_IMAGE_BOX_FACTOR = 3.0
 # When merging two detection box, need to have some level of overlap
 # This threshold means the centers in both dimension need to be less
 # than (box1_width + box2_width) * threshold
-BOX_OVERLAP_THRESHOLD = 0.5
+# BOX_OVERLAP_THRESHOLD = 0.5
+BOX_OVERLAP_THRESHOLD = 0.2
 
 # =============================================================================
 # For checking false detection
@@ -110,7 +111,19 @@ MAX_CPU_FOR_MASK_EXTRACTION = 24
 # =============================================================================
 # The Neural Network
 CNN_IMAGE_SIZE = 256
-CNN_SAVED_MODEL = 'saved_model/cnn_star_256.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201008_2.375-0.054.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201008_3.187-0.040.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201008_4.378-0.162.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201017_4_cnn4_.459-0.151.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201017_4_cnn4_lre-4_.814-0.097.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201020_1_cnn7_lre-5_.259-0.114.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201022_1_cnn7_lre-4_.483-0.00004.hdf5'
+# CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201025_1_cnn11_lre-4_.732-0.00001.hdf5'
+
+# 2020-10-25: This model weight seems to have the best performance on one test set
+CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201025_1_cnn11_lre-4_.731-0.00002.hdf5'
+
 # CNN_SAVED_MODEL = 'saved_model/cnn_star_256-20200517-0.074.hdf5'
 # CNN_SAVED_MODEL = 'saved_model/cnn_star_256-20200518-0.091.hdf5'
 

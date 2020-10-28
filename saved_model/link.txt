@@ -1,6 +1,6 @@
 1. Get the .hdf5 file from below link:
 
-https://pan.baidu.com/s/1odGG2Ib98bH3DhNZu_ihvg
-code: t6w2
+https://pan.baidu.com/s/1wYpc7WFK4sl_RhN47TP2Vw
+code: i1fi
 
 2. Put the .hdf5 files to the "saved_model" folder

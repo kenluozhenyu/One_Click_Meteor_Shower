@@ -7,6 +7,7 @@ import os
 import shutil
 import threading
 import multiprocessing
+from time import sleep
 from keras_preprocessing.image import ImageDataGenerator
 
 import model
@@ -1012,10 +1013,14 @@ class MeteorDetector:
             # end of the for current_line loop
         # end of the for previous_line loop
 
+        # This info is just for debugging.
+        # No need to report the number of satellites to user
+        '''
         if verbose:
             print('{}: ... {} detected {} satellites'.format(self.Thread_Name,
                                                              self.Previous_Image_Filename,
                                                              len(self.Previous_Image_Satellites)))
+        '''
         # End of function
 
     # Logic:
@@ -1106,11 +1111,16 @@ class MeteorDetector:
 
                 # Extract the detected portions to small image files
                 # Normally they would be 640x640 size, but can be bigger
+                if verbose:
+                    print('{}: ... {} detected {} suspected objects'.format(self.Thread_Name,
+                                                                            self.Previous_Image_Filename,
+                                                                            len(previous_detection_wo_satellite)))
+
                 self.extract_meteor_images_to_file(self.Previous_Image,
                                                    previous_detection_wo_satellite,
                                                    extracted_file_dir,
                                                    self.Previous_Image_Filename,
-                                                   verbose)
+                                                   verbose=0)
             else:
                 # No any line detected
                 # Save an image with updated file name to indicate
@@ -1278,10 +1288,11 @@ class MeteorDetector:
                 # num_of_images_to_be_processed = num_of_images - 1
                 # if last_image_needs_detection:
                 #     num_of_images_to_be_processed = num_of_images
-                print("\n{} is processing image {} ...  {} of {} for this thread".format(self.Thread_Name,
-                                                                                         image_file,
-                                                                                         index+1,
-                                                                                         num_of_images - 1))
+                if index + 1 <= num_of_images - 1:
+                    print("\n{} is processing image {} ...  {} of {} for this thread".format(self.Thread_Name,
+                                                                                             image_file,
+                                                                                             index+1,
+                                                                                             num_of_images - 1))
 
             if subtraction and num_of_images > 1:
                 # For star-aligned images, doing a subtraction will easily remove
@@ -1316,6 +1327,8 @@ class MeteorDetector:
                                                                     draw_box_file_dir,
                                                                     extracted_file_dir,
                                                                     verbose=verbose)
+            # Do a small sleep to allow GUI update
+            # sleep(0.05)
         # end for-loop
     # end of function
 
@@ -1537,8 +1550,12 @@ def filter_possible_not_meteor_objects(detection_folder, keep_folder, removed_fo
     # label_map = test_generator.class_indices
     # print(label_map)
 
-    cnn_model = model.cnn()
+    # cnn_model = model.cnn()
     # cnn_model = model.cnn_2()
+    # cnn_model = model.cnn_3()
+    # cnn_model = model.cnn_4()
+    # cnn_model = model.cnn_7()
+    cnn_model = model.cnn_11()
     cnn_model.load_weights(settings.CNN_SAVED_MODEL)
 
     filenames = test_generator.filenames

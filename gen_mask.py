@@ -5,9 +5,8 @@ import math
 import shutil
 import threading
 import multiprocessing
-import numpy as np
+from time import sleep
 from PIL import Image, ImageOps, ImageChops, ImageDraw, ImageFont
-from keras_preprocessing.image import ImageDataGenerator
 
 import model
 import unet_proc
@@ -102,7 +101,7 @@ class Gen_mask:
                 # Just save the original image to the mosaic folder
                 file_to_save = os.path.join(save_dir, image_file)
                 cv2.imwrite(file_to_save, original_img)
-
+            # sleep(0.02)
         # End for-loop
 
     def __convert_image_to_gray_256(self, original_img):
@@ -150,6 +149,7 @@ class Gen_mask:
 
         for image_file in image_list:
             self.__convert_image_file_to_gray_256(file_dir, image_file, save_dir)
+            # sleep(0.2)
 
     # image_folder is the folder contains processed image, 256x256, gray
     def gen_meteor_mask_from_folder(self, image_folder, output_folder):
@@ -298,6 +298,7 @@ class Gen_mask:
             file_to_save = os.path.join(save_dir, file_to_save)
 
             cv2.imwrite(file_to_save, resized_img)
+            # sleep(0.02)
 
     # After the masks are generated, and re-sized back (normally 640x640),
     # scan the ones from mosaic, and merge them back to one file
@@ -431,6 +432,7 @@ class Gen_mask:
                 file_to_save = image_file
                 file_to_save = os.path.join(save_dir, file_to_save)
                 shutil.copyfile(orig_file, file_to_save)
+            # sleep(0.02)
         # end of for-loop
 
     def extract_meteor_from_cropped_file_with_mask(self, cropped_photo_file, mask_file, save_file):
@@ -628,6 +630,7 @@ class Gen_mask:
                     self.extract_meteor_from_original_file_with_mask(original_file_to_read,
                                                                      mask_file_to_read,
                                                                      file_to_save)
+            # sleep(0.02)
         # end for loop of the mask_list
 
     # This extends the XXX x XXX extracted meteor objects png file to the original big
@@ -766,6 +769,8 @@ class Gen_mask:
             pil_im.save(file_to_save, "PNG")
             # cv2_im_processed = cv2.cvtColor(np.array(pil_im), cv2.COLOR_RGB2BGR)
             # cv2.imwrite(file_to_save, cv2_im_processed, [cv2.IMWRITE_PNG_COMPRESSION, 3])
+
+            # sleep(0.02)
         # end for loop
 
     def extend_extracted_objects_to_original_photo_size_by_multi_threading(self, file_dir, save_dir, label_save_dir,
@@ -947,6 +952,7 @@ class Gen_mask:
                     img = Image.open(filename_w_path)
                     combined_img = Image.alpha_composite(combined_img, img)
             i += 1
+            # sleep(0.02)
 
         file_to_save = specified_filename
         file_to_save = os.path.join(save_dir, file_to_save)

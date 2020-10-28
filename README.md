@@ -31,7 +31,7 @@ The corresponding parameters are tuned with the full size images from Canon 5D I
 
 Detecting lines is not enough. Planes, maybe satellites, landscape objects could also be recognized as a line.
 
-To try to recognize the satellite/plane objects, the algorithm is to compare two continuous images to look for lines with similar angle and distance (*the distance parameter would need further adjustment for different lens view* -- **TO DO #1**).
+To try to recognize the satellite/plane objects, the algorithm is to compare two continuous images to look for lines with similar angle and distance (*the distance parameter would need further adjustment for different lens view* -- **TO DO in the future #1**).
 
 For landscape objects I have no way at this point, unless if I want to go for training an image recognition Neural Network.
 
@@ -41,7 +41,7 @@ And for some very short meteors they could be missed in the detection.
 
 Anyway I think the result is still acceptable.
 
-For the"false detection", unrecognized satellites and landscape objects, a simple CNN neural network was trained to distinguish star backgrounds vs landscape objects. However this cannot solve all. The current alternative is to change to "two-clicks":
+For the"false detection", unrecognized satellites and landscape objects, a deep CNN neural network was trained to distinguish star backgrounds vs landscape objects. However this still may not solve all especially for satellites. The current alternative is to change to "two-clicks":
 
  1. Do the meteor detection process, stop and manually remove those false object files
  2. Resume with he 2nd script to extract the meteor objects
@@ -73,9 +73,8 @@ And here's a composition with a star background
 
 (I intentionally increased the brightness of the combined meteors for visible propose here)
 
-**Known issue:**
-**(Fixed in 2020-03-01 update)**
-The border of the extracted meteor could be too deep. Still need to adjust the algorithm -- **TO DO #3 (done)**
+
+The border of the extracted meteor could be too deep. A threshold value was used to control the border not to be that dark.
 ![enter image description here](images/final-detail.jpg)
 
 ## Suggestion to users
@@ -92,3 +91,14 @@ Run step example:
 ***Update (2020-5-17):**  One "equatorial_mount (Y/N)" option is added to the command line. Images taken with fixed tripod should choose "N" even though they are star-aligned. This can help the program to choose a bigger blur kernel size for object detection procedure.*
 
 **The trained model weight files for the Neural Networks are put to Baidu cloud drive. Get the download info from the /saved_model/link.txt**
+
+## GUI provided !!!
+2020-10-28 update:
+
+Finally a GUI is provided, with Windows executable file also generated. 
+(The exe was built with Chinese GUI)
+
+![enter image description here](images/gui_en.png)
+
+
+Get the link to the executable file from /executable/link.txt

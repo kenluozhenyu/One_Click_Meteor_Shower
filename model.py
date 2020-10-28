@@ -220,6 +220,242 @@ def cnn_2(input_size=(256, 256, 3)):
 
     return model
 
+
+def cnn_3(input_size=(256, 256, 3)):
+    model = Sequential()
+
+    # model.add(Conv2D(64, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    # model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(16, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    model.add(Conv2D(16, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Flatten())
+    # model.add(Dropout(0.5))
+
+    # 2020-10-08 added
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+
+    # model.add(Dense(64, activation='relu'))
+    # model.add(Dropout(0.5))
+
+    # model.add(Dense(32, activation='relu'))
+    # model.add(Dropout(0.5))
+
+    # model.add(Dense(3, activation='softmax'))
+    model.add(Dense(2, activation='sigmoid'))
+
+    return model
+
+
+def cnn_4(input_size=(256, 256, 3)):
+    model = Sequential()
+
+    # model.add(Conv2D(64, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    # model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same', input_shape=input_size))
+    model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Dropout(0.5))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(1024, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(1024, (3, 3), activation='relu', padding='same'))
+    model.add(Dropout(0.5))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    '''
+    model.add(Conv2D(512, (3, 3), activation='relu'))
+    model.add(Conv2D(512, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    '''
+    model.add(Flatten())
+    # model.add(Dropout(0.5))
+
+    # 2020-10-08 added
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+
+    # model.add(Dense(64, activation='relu'))
+    # model.add(Dropout(0.5))
+
+    # model.add(Dense(32, activation='relu'))
+    # model.add(Dropout(0.5))
+
+    # model.add(Dense(3, activation='softmax'))
+    model.add(Dense(2, activation='sigmoid'))
+
+    return model
+
+
+def cnn_7(input_size=(256, 256, 3)):
+    model = Sequential()
+
+    # model.add(Conv2D(64, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    # model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=input_size))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    # model.add(Conv2D(1024, (3, 3), activation='relu', padding='same'))
+    # model.add(Conv2D(1024, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    '''
+    model.add(Conv2D(512, (3, 3), activation='relu'))
+    model.add(Conv2D(512, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    '''
+    model.add(Flatten())
+    # model.add(Dropout(0.5))
+
+    # 2020-10-08 added
+    model.add(Dense(1048, activation='relu'))
+    model.add(Dropout(0.25))
+    model.add(Dense(1048, activation='relu'))
+    model.add(Dropout(0.25))
+
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(0.25))
+
+    # model.add(Dense(64, activation='relu'))
+    # model.add(Dropout(0.5))
+
+    # model.add(Dense(32, activation='relu'))
+    # model.add(Dropout(0.5))
+
+    # model.add(Dense(3, activation='softmax'))
+    model.add(Dense(2, activation='sigmoid'))
+
+    return model
+
+
+def cnn_11(input_size=(256, 256, 3)):
+    model = Sequential()
+
+    # model.add(Conv2D(64, (3, 3), strides=(2, 2), activation='relu', padding='same', input_shape=input_size))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    # model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=input_size))
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    # model.add(Conv2D(1024, (3, 3), activation='relu', padding='same'))
+    # model.add(Conv2D(1024, (3, 3), activation='relu', padding='same'))
+    # model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+
+    '''
+    model.add(Conv2D(512, (3, 3), activation='relu'))
+    model.add(Conv2D(512, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+    '''
+    model.add(Flatten())
+    # model.add(Dropout(0.5))
+
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.25))
+    model.add(Dense(1024, activation='relu'))
+    model.add(Dropout(0.25))
+
+    model.add(Dense(64, activation='relu'))
+    model.add(Dropout(0.25))
+
+    model.add(Dense(2, activation='sigmoid'))
+
+    return model
+
 # if __name__ == "__main__":
 #    model = unet(input_size=(640, 640, 3))
 #    model.summary()

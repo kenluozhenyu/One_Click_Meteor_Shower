@@ -3,11 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="6e6eccdc-d9e2-4746-b0e0-409b107b926a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto_meteor_shower.py" beforeDir="false" afterPath="$PROJECT_DIR$/auto_meteor_shower.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/excuteable/link.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/gen_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_mask.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saved_model/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/saved_model/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/two_clicks_step1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/two_clicks_step2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unet_proc.py" beforeDir="false" afterPath="$PROJECT_DIR$/unet_proc.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +37,7 @@
   <component name="PropertiesComponent">
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/3_clicks_step2.py" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -48,7 +51,7 @@
       <recent name="D:\PycharmProjects\One_Click_Meteor_Shower\saved_model" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.3_clicks_step3">
+  <component name="RunManager" selected="Python.AutoMeteor">
     <configuration name="3_clicks_step1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="One_Click_Meteor_Shower" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -62,7 +65,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_clicks_step1.py" />
-      <option name="PARAMETERS" value="Y F:\auto_meteor\big_bear_0811\star-aligned" />
+      <option name="PARAMETERS" value="N F:\auto_meteor\jump_ye\batch3\star-aligned" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -83,7 +86,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_clicks_step2.py" />
-      <option name="PARAMETERS" value="F:\auto_meteor\big_bear_0811\star-aligned" />
+      <option name="PARAMETERS" value="F:\auto_meteor\SuPi\20180812\JPG\star-aligned" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -104,7 +107,28 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_clicks_step3.py" />
-      <option name="PARAMETERS" value="F:\auto_meteor\big_bear_0811\star-aligned" />
+      <option name="PARAMETERS" value="F:\auto_meteor\jump_ye\batch1\star-aligned" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="AutoMeteor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="One_Click_Meteor_Shower" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/AutoMeteor.py" />
+      <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -147,6 +171,27 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/auto_meteor_shower.py" />
       <option name="PARAMETERS" value="extraction F:\meteor-one-click-2018-08-milkyway" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="call_MainWin" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="One_Click_Meteor_Shower" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/call_MainWin.py" />
+      <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -197,15 +242,19 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.auto_meteor_shower" />
-      <item itemvalue="Python.3_clicks_step3" />
       <item itemvalue="Python.3_clicks_step2" />
+      <item itemvalue="Python.3_clicks_step3" />
+      <item itemvalue="Python.auto_meteor_shower" />
       <item itemvalue="Python.3_clicks_step1" />
+      <item itemvalue="Python.AutoMeteor" />
+      <item itemvalue="Python.call_MainWin" />
       <item itemvalue="Python.detection_test" />
       <item itemvalue="Python.gen_mask" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.AutoMeteor" />
+        <item itemvalue="Python.call_MainWin" />
         <item itemvalue="Python.3_clicks_step1" />
         <item itemvalue="Python.gen_mask" />
         <item itemvalue="Python.detection_test" />
@@ -236,34 +285,41 @@
     </todo-panel>
   </component>
   <component name="WindowStateProjectService">
-    <state x="610" y="313" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1598672132191">
+    <state x="540" y="300" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602063707474">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="610" y="313" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598672132191" />
+    <state x="540" y="300" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1602063707474" />
+    <state x="654" y="478" width="473" height="503" key="#com.intellij.tools.ToolEditorDialog" timestamp="1601804758467">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="654" y="478" width="473" height="503" key="#com.intellij.tools.ToolEditorDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1601804758467" />
     <state x="746" y="308" key="FileChooserDialogImpl" timestamp="1598671981819">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="746" y="308" key="FileChooserDialogImpl/2560.0.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1590587702243" />
     <state x="746" y="308" key="FileChooserDialogImpl/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598671981819" />
-    <state width="1788" height="362" key="GridCell.Tab.0.bottom" timestamp="1598631827930">
+    <state width="2027" height="139" key="GridCell.Tab.0.bottom" timestamp="1603898544921">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1788" height="362" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598631827930" />
-    <state width="1788" height="362" key="GridCell.Tab.0.center" timestamp="1598631827930">
+    <state width="1740" height="237" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
+    <state width="2027" height="139" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1603898544921" />
+    <state width="2027" height="139" key="GridCell.Tab.0.center" timestamp="1603898544920">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1788" height="362" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598631827930" />
-    <state width="1788" height="362" key="GridCell.Tab.0.left" timestamp="1598631827930">
+    <state width="1740" height="237" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
+    <state width="2027" height="139" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1603898544920" />
+    <state width="2027" height="139" key="GridCell.Tab.0.left" timestamp="1603898544920">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1788" height="362" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598631827930" />
-    <state width="1788" height="362" key="GridCell.Tab.0.right" timestamp="1598631827930">
+    <state width="1740" height="237" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
+    <state width="2027" height="139" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1603898544920" />
+    <state width="2027" height="139" key="GridCell.Tab.0.right" timestamp="1603898544921">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1788" height="362" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598631827930" />
-    <state x="760" y="466" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1590587724914">
+    <state width="1740" height="237" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
+    <state width="2027" height="139" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1603898544921" />
+    <state x="393" y="293" key="SettingsEditor" timestamp="1601804825367">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="760" y="466" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/2560.0.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1590587724914" />
+    <state x="393" y="293" key="SettingsEditor/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1601804825367" />
   </component>
 </project>
