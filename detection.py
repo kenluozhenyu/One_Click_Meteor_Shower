@@ -974,7 +974,10 @@ class MeteorDetector:
             if verbose:
                 print("{}:    saving {} ...".format(self.Thread_Name, file_to_save))
 
-            cv2.imwrite(file_to_save, crop_img)
+            # cv2.imwrite(file_to_save, crop_img)
+
+            # To solve the Chinese character support issue in OpenCV PY
+            cv2.imencode(file_ext, crop_img)[1].tofile(file_to_save)
         # End of function
 
     # Logic:
@@ -1052,11 +1055,18 @@ class MeteorDetector:
         '''
 
         filename_w_path = os.path.join(file_dir, orig_filename)
-        orig_img = cv2.imread(filename_w_path)
+        # orig_img = cv2.imread(filename_w_path)
+
+        # Change to this method as a work-around for the issue
+        # in OpenCV PY supporting Chinese path/file name
+        # cv2.IMREAD_UNCHANGED == -1
+        orig_img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
 
         # Do a subtraction with another image, which has been star-aligned
         file_for_subtraction_w_path = os.path.join(file_dir, file_for_subtraction)
-        img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
+        # img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
+        img_for_subtraction = cv2.imdecode(np.fromfile(file_for_subtraction_w_path, dtype=np.uint8), -1)
+
         img = cv2.subtract(orig_img, img_for_subtraction)
 
         detection_lines = self.detect_meteor_from_image(img, orig_img, equatorial_mount=equatorial_mount)
@@ -1107,7 +1117,9 @@ class MeteorDetector:
                 # draw_filename = os.path.join(file_dir, draw_filename)
                 # draw_filename = os.path.join(save_dir, draw_filename)
                 draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-                cv2.imwrite(draw_filename, draw_img)
+
+                # cv2.imwrite(draw_filename, draw_img)
+                cv2.imencode(file_ext, draw_img)[1].tofile(draw_filename)
 
                 # Extract the detected portions to small image files
                 # Normally they would be 640x640 size, but can be bigger
@@ -1129,7 +1141,9 @@ class MeteorDetector:
 
                 # draw_filename = os.path.join(save_dir, draw_filename)
                 draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-                cv2.imwrite(draw_filename, self.Previous_Image)
+
+                # cv2.imwrite(draw_filename, self.Previous_Image)
+                cv2.imencode(file_ext, self.Previous_Image)[1].tofile(draw_filename)
 
         # The previous file was handled and done
         # Update the previous data to the current
@@ -1181,7 +1195,8 @@ class MeteorDetector:
         '''
 
         filename_w_path = os.path.join(file_dir, orig_filename)
-        orig_img = cv2.imread(filename_w_path)
+        # orig_img = cv2.imread(filename_w_path)
+        orig_img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
 
         filename_no_ext, file_ext = os.path.splitext(orig_filename)
 
@@ -1199,7 +1214,8 @@ class MeteorDetector:
             draw_filename = draw_filename + file_ext
 
             draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-            cv2.imwrite(draw_filename, draw_img)
+            # cv2.imwrite(draw_filename, draw_img)
+            cv2.imencode(file_ext, draw_img)[1].tofile(draw_filename)
 
             # Extract the detected portions to small image files
             # Normally they would be 640x640 size, but can be bigger
@@ -1216,7 +1232,8 @@ class MeteorDetector:
 
             # draw_filename = os.path.join(save_dir, draw_filename)
             draw_filename = os.path.join(draw_box_file_dir, draw_filename)
-            cv2.imwrite(draw_filename, orig_img)
+            # cv2.imwrite(draw_filename, orig_img)
+            cv2.imencode(file_ext, orig_img)[1].tofile(draw_filename)
     # end of function
 
     # Go through all image files in the "file_dir". Will only

@@ -31,9 +31,9 @@ The corresponding parameters are tuned with the full size images from Canon 5D I
 
 Detecting lines is not enough. Planes, maybe satellites, landscape objects could also be recognized as a line.
 
-To try to recognize the satellite/plane objects, the algorithm is to compare two continuous images to look for lines with similar angle and distance (*the distance parameter would need further adjustment for different lens view* -- **TO DO in the future #1**).
+To try to recognize the satellite/plane objects, the algorithm is to compare two continuous images to look for lines with similar angle and distance (*the distance parameter would need further adjustment for different lens view*).
 
-For landscape objects I have no way at this point, unless if I want to go for training an image recognition Neural Network.
+For landscape objects I have no way at this point, need to go for image recognition with Neural Network.
 
 In the test result I can detect quite a lot of satellites. But still there would be some left.
 

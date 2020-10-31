@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import cv2
 import os
+import numpy as np
 import math
 import shutil
 import threading
@@ -35,7 +36,8 @@ class Gen_mask:
             filename_w_path = os.path.join(file_dir, image_file)
             filename_no_ext, file_ext = os.path.splitext(image_file)
 
-            original_img = cv2.imread(filename_w_path)
+            # original_img = cv2.imread(filename_w_path)
+            original_img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
 
             orig_height = original_img.shape[0]
             orig_width = original_img.shape[1]
@@ -94,13 +96,16 @@ class Gen_mask:
                                        file_ext
 
                         file_to_save = os.path.join(save_dir, file_to_save)
-                        cv2.imwrite(file_to_save, mosaic_img)
+                        # cv2.imwrite(file_to_save, mosaic_img)
+                        cv2.imencode(file_ext, mosaic_img)[1].tofile(file_to_save)
 
             else:
                 # No need to do mosaic
                 # Just save the original image to the mosaic folder
                 file_to_save = os.path.join(save_dir, image_file)
-                cv2.imwrite(file_to_save, original_img)
+                # cv2.imwrite(file_to_save, original_img)
+                cv2.imencode(file_ext, original_img)[1].tofile(file_to_save)
+
             # sleep(0.02)
         # End for-loop
 
@@ -129,13 +134,16 @@ class Gen_mask:
         filename_w_path = os.path.join(file_dir, orig_filename)
         filename_no_ext, file_ext = os.path.splitext(orig_filename)
 
-        img = cv2.imread(filename_w_path)
+        # img = cv2.imread(filename_w_path)
+        img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
+
         gray_256 = self.__convert_image_to_gray_256(img)
 
         file_gray_256 = filename_no_ext + "_gray_256" + file_ext
         file_gray_256 = os.path.join(save_dir, file_gray_256)
 
-        cv2.imwrite(file_gray_256, gray_256)
+        # cv2.imwrite(file_gray_256, gray_256)
+        cv2.imencode(file_ext, gray_256)[1].tofile(file_gray_256)
 
     def convert_image_folder_to_gray_256(self, file_dir, save_dir):
         print("\nConverting the detected meteor images to gray 256x256 size ...")
@@ -270,7 +278,11 @@ class Gen_mask:
 
                 x1, y1, x2, y2 = self.get_image_pos_from_file_name(image_file)
 
-                img = cv2.imread(filename_w_path)
+                # img = cv2.imread(filename_w_path)
+
+                # The small mask file (in 256x256) is in 8-bit format
+                # Need to covert the image to 24-bit format
+                img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), cv2.IMREAD_COLOR)
 
                 # original_width = settings.detection_crop_img_box_size
                 original_width = abs(x2 - x1)
@@ -283,7 +295,8 @@ class Gen_mask:
                 # settings.DETECTION_CROP_IMAGE_BOX_SIZE (normally it is 640)
                 original_width = settings.DETECTION_CROP_IMAGE_BOX_SIZE
                 height = settings.DETECTION_CROP_IMAGE_BOX_SIZE
-                img = cv2.imread(filename_w_path)
+                # img = cv2.imread(filename_w_path)
+                img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), cv2.IMREAD_COLOR)
 
             resized_img = cv2.resize(img, (original_width, height))
 
@@ -291,13 +304,14 @@ class Gen_mask:
             #
             # 2020-3-14:
             # NO. This will be used for extracted the meteor object directly
-            # Keep it as 24-bit
+            # Keep it as 24-bit. Don't covert it to 8-bit
             # resized_img = cv2.cvtColor(resized_img, cv2.COLOR_BGR2GRAY)
 
             file_to_save = filename_no_ext + "_{}".format(original_width) + file_ext
             file_to_save = os.path.join(save_dir, file_to_save)
 
-            cv2.imwrite(file_to_save, resized_img)
+            # cv2.imwrite(file_to_save, resized_img)
+            cv2.imencode(file_ext, resized_img)[1].tofile(file_to_save)
             # sleep(0.02)
 
     # After the masks are generated, and re-sized back (normally 640x640),
@@ -682,7 +696,10 @@ class Gen_mask:
             # use im = cv2.imread(file, cv2.IMREAD_UNCHANGED).
             # You will obtain a BGRA image.
             # img = cv2.imread(filename_w_path)
-            img = cv2.imread(filename_w_path, cv2.IMREAD_UNCHANGED)
+
+            # img = cv2.imread(filename_w_path, cv2.IMREAD_UNCHANGED)
+            # cv2.IMREAD_UNCHANGED = -1
+            img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
 
             left_extend = x1
             top_extend = y1
@@ -717,7 +734,8 @@ class Gen_mask:
             filename_to_save = filename_no_ext + file_ext
             file_to_save = os.path.join(save_dir, filename_to_save)
 
-            cv2.imwrite(file_to_save, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 3])
+            # cv2.imwrite(file_to_save, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 3])
+            cv2.imencode(file_ext, extend_img, [cv2.IMWRITE_PNG_COMPRESSION, 3])[1].tofile(file_to_save)
 
             # 2020-7-4:
             # Add the file name as the label to the image, and save to another location

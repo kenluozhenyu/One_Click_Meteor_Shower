@@ -588,9 +588,17 @@ class MyMainForm(QMainWindow):
         object_extracted_dir, FINAL_dir, FINAL_w_label_dir, FINAL_combined_dir = get_folder_list(self.processFolder)
 
         if not os.path.exists(mosaic_merge_back_dir):
-            QMessageBox.information(self, "Info",
-                                    "Seems mask file not generated yet. \n\nPlease try step 3 first.",
-                                    QMessageBox.Ok)
+            # QMessageBox.information(self, "Info",
+            #                         "Seems mask file not generated yet. \n\nPlease try step 3 first.",
+            #                         QMessageBox.Ok)
+            msg = QMessageBox()
+            msg.setWindowTitle("Info")
+            msg.setText("Seems mask file not generated yet. \n\nPlease try step 3 first.")
+            msg.setIcon(QMessageBox.Information)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.setStyleSheet("QLabel{ color: white}")
+            msg.setStyleSheet("text-color: rgb(0, 0, 0);")
+            msg.exec_()
             return
 
         os.startfile(mosaic_merge_back_dir)
