@@ -22,7 +22,8 @@ RATIO_FOR_MOSAIC = 1.5
 # This ratio is about how much (of the width or height) of
 # two images to be overlapped
 # Value from 0 to 1
-MOSAIC_OVERLAP_RATIO = 0.5
+# MOSAIC_OVERLAP_RATIO = 0.5
+MOSAIC_OVERLAP_RATIO = 0.25
 
 # To ensure the detected object is within the cropped image, would
 # need to enlarge the detection box
@@ -130,4 +131,16 @@ CNN_SAVED_MODEL = 'saved_model/cnn_star_256_20201025_1_cnn11_lre-4_.731-0.00002.
 UNET_IMAGE_SIZE = 256
 # unet_saved_model = 'saved_model/unet_meteor_gray_256_png.hdf5'
 # UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray_256_png-good.hdf5'
-UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray256png_final.hdf5'
+
+# 2020-11-17: Test result on a Qing-Hai dataset shows this model
+# seems still better than the result from the UNET++ model
+# Need to re-do the test with mosaic ratio back to 0.5 <== TODO
+# UNET_SAVED_MODEL = 'saved_model/unet_meteor_gray256png_final.hdf5'
+
+# 2020-11-11: Test result shows the 20201108-2 version is a little bit better than
+#             the 20201110-1 version
+# UNET_SAVED_MODEL = 'saved_model/unet++_meteor_gray256png_20201108-2_wo_val.183-0.228.hdf5'
+# UNET_SAVED_MODEL = 'saved_model/unet++_meteor_gray256png_20201110-1_wo_val.183-0.220.hdf5'
+
+# 2021-03-15: Newer trained model for UNET++. Test result is quite good
+UNET_SAVED_MODEL = 'saved_model/unet++_meteor_gray256_20210314-3_wo_val.297-0.201.hdf5'

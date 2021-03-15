@@ -167,7 +167,8 @@ class Gen_mask:
             os.mkdir(output_folder)
 
         # The image size supported is (256, 256)
-        unet_model = model.unet(input_size=(settings.UNET_IMAGE_SIZE, settings.UNET_IMAGE_SIZE, 1))
+        # unet_model = model.unet(input_size=(settings.UNET_IMAGE_SIZE, settings.UNET_IMAGE_SIZE, 1))
+        unet_model = model.unet_plus_plus(input_size=(settings.UNET_IMAGE_SIZE, settings.UNET_IMAGE_SIZE, 1))
         unet_model.load_weights(settings.UNET_SAVED_MODEL)
 
         test_image_list = os.listdir(image_folder)

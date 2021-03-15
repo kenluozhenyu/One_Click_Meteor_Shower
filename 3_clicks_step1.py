@@ -47,6 +47,7 @@ if __name__ == "__main__":
     detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
                                                                        process_dir,
                                                                        subtraction=True,
+                                                                       # subtraction=False,
                                                                        equatorial_mount=is_equatorial_mount,
                                                                        verbose=1)
 

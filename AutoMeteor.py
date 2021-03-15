@@ -63,6 +63,7 @@ def Step_1_Process_Detection(processFolder, is_equatorial_mount):
     detection.multi_thread_process_detect_n_extract_meteor_from_folder(original_dir,
                                                                        process_dir,
                                                                        subtraction=True,
+                                                                       # subtraction=False,
                                                                        equatorial_mount=is_equatorial_mount,
                                                                        verbose=1)
 

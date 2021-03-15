@@ -820,6 +820,20 @@ class MeteorDetector:
 
         blur_img = cv2.GaussianBlur(detection_img, (blur_kernel_size, blur_kernel_size), 0)
 
+        # 2020-11-29: TO DO
+        # Here if we have a 16-bit image (like TIF file), we need to convert it to 8-bit
+        # to satisfy the openCV.Canny() function
+        #
+        # We could use this method:
+        # img8 = (img16/256).astype('uint8')
+        #
+        # but first we'd need to check if the image is 16-bit
+        #     May try this:
+        #     if blur_img.depth() == CV_16U...
+        #
+        # This is to be done later...
+        #
+
         # blur_img_enh = cv2.GaussianBlur(enhanced_img, (blur_kernel_size, blur_kernel_size), 0)
 
         canny_lowThreshold = settings.DETECTION_CANNY_LOW_THRESHOLD
@@ -1128,6 +1142,8 @@ class MeteorDetector:
                                                                             self.Previous_Image_Filename,
                                                                             len(previous_detection_wo_satellite)))
 
+                # To avoid to many info printed to the GUI causing crash,
+                # change the verbose to 0
                 self.extract_meteor_images_to_file(self.Previous_Image,
                                                    previous_detection_wo_satellite,
                                                    extracted_file_dir,
@@ -1219,11 +1235,14 @@ class MeteorDetector:
 
             # Extract the detected portions to small image files
             # Normally they would be 640x640 size, but can be bigger
+            #
+            # To avoid to many info printed to the GUI causing crash,
+            # change the verbose to 0
             self.extract_meteor_images_to_file(orig_img,
                                                detection_lines,
                                                extracted_file_dir,
                                                orig_filename,
-                                               verbose)
+                                               verbose=0)
         else:
             # No line detected
             # Save an image with updated file name to indicate

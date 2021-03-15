@@ -3,11 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="6e6eccdc-d9e2-4746-b0e0-409b107b926a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_clicks_step1.py" beforeDir="false" afterPath="$PROJECT_DIR$/3_clicks_step1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoMeteor.py" beforeDir="false" afterPath="$PROJECT_DIR$/AutoMeteor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gen_mask.py" beforeDir="false" afterPath="$PROJECT_DIR$/gen_mask.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_ui_chn.ui" beforeDir="false" afterPath="$PROJECT_DIR$/main_ui_chn.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +63,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/3_clicks_step1.py" />
-      <option name="PARAMETERS" value="N F:\auto_meteor\jump_ye\batch3\star-aligned" />
+      <option name="PARAMETERS" value="Y F:\auto_meteor\meteor-one-click-test-original-images\star-aligned" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -251,8 +252,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.AutoMeteor" />
-        <item itemvalue="Python.call_MainWin" />
         <item itemvalue="Python.3_clicks_step1" />
+        <item itemvalue="Python.call_MainWin" />
         <item itemvalue="Python.gen_mask" />
         <item itemvalue="Python.detection_test" />
       </list>
@@ -280,43 +281,5 @@
       <are-packages-shown value="true" />
       <is-autoscroll-to-source value="true" />
     </todo-panel>
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="540" y="300" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602063707474">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state x="540" y="300" width="1089" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1602063707474" />
-    <state x="654" y="478" width="473" height="503" key="#com.intellij.tools.ToolEditorDialog" timestamp="1601804758467">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state x="654" y="478" width="473" height="503" key="#com.intellij.tools.ToolEditorDialog/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1601804758467" />
-    <state x="746" y="308" key="FileChooserDialogImpl" timestamp="1598671981819">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state x="746" y="308" key="FileChooserDialogImpl/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1598671981819" />
-    <state width="1778" height="191" key="GridCell.Tab.0.bottom" timestamp="1604138376777">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state width="1740" height="237" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
-    <state width="1778" height="191" key="GridCell.Tab.0.bottom/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1604138376777" />
-    <state width="1778" height="191" key="GridCell.Tab.0.center" timestamp="1604138376776">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state width="1740" height="237" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
-    <state width="1778" height="191" key="GridCell.Tab.0.center/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1604138376776" />
-    <state width="1778" height="191" key="GridCell.Tab.0.left" timestamp="1604138376776">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state width="1740" height="237" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
-    <state width="1778" height="191" key="GridCell.Tab.0.left/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1604138376776" />
-    <state width="1778" height="191" key="GridCell.Tab.0.right" timestamp="1604138376777">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state width="1740" height="237" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1603321062920" />
-    <state width="1778" height="191" key="GridCell.Tab.0.right/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1604138376777" />
-    <state x="393" y="293" key="SettingsEditor" timestamp="1601804825367">
-      <screen x="0" y="0" width="2048" height="1112" />
-    </state>
-    <state x="393" y="293" key="SettingsEditor/2560.196.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1601804825367" />
   </component>
 </project>
