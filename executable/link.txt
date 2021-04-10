@@ -6,13 +6,7 @@ The executable file, and the network weight files are all included.
 
 2021-04-10 update:
 ===========================================================
-The UNET model has been changed to UNET++
-
-Please download the new weight file from the same location
-if you want to use the latest source code to run.
-- unet++_meteor_gray256_20210314-3_wo_val.297-0.201.hdf5
-
-
-The executable file was not updated yet. Still use the old
+In source code the UNET model has been changed to UNET++
+But the executable file was not updated yet. Still use the old
 weight file.
 - unet_meteor_gray256png_final.hdf5

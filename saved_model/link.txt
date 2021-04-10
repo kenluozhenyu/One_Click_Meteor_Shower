@@ -4,3 +4,16 @@ https://pan.baidu.com/s/1wYpc7WFK4sl_RhN47TP2Vw
 code: i1fi
 
 2. Put the .hdf5 files to the "saved_model" folder
+
+2021-04-10 update:
+===========================================================
+The UNET model has been changed to UNET++
+
+Please download the new weight file from the same location
+if you want to use the latest source code to run.
+- unet++_meteor_gray256_20210314-3_wo_val.297-0.201.hdf5
+
+
+The executable file was not updated yet. Still use the old
+weight file.
+- unet_meteor_gray256png_final.hdf5
