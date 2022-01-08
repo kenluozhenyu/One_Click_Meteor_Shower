@@ -191,7 +191,11 @@ class Gen_mask:
             class_mode=None)
         '''
 
-        results = unet_model.predict_generator(testGene, num_image, verbose=1)
+        # results = unet_model.predict_generator(testGene, num_image, verbose=1)
+
+        # 2021-7-22:
+        # To align with TF2 API
+        results = unet_model.predict(testGene, num_image, verbose=1)
         # results = unet_model.predict_generator(test_generator, num_image, verbose=1)
 
         unet_proc.saveResult_V2(output_folder, results, test_image_list)
@@ -457,7 +461,10 @@ class Gen_mask:
         # The mask image has been changed to 24-bit
         # photo_img = ImageOps.grayscale(photo_img)
 
-        mask_img = Image.open(mask_file)
+        # 2021-7-9: Need to ensure the mask img format is in RGB
+        # As we allow people to edit the mask file manually, sometimes
+        # the edit s/w could save the file to RGBA format
+        mask_img = Image.open(mask_file).convert('RGB')
 
         img_extract = ImageChops.multiply(cropped_img, mask_img)
         img_extract = img_extract.convert("RGBA")

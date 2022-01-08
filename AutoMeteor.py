@@ -13,8 +13,9 @@ from main_ui_chn import Ui_MainWindow
 # from main_ui_en import Ui_MainWindow
 
 # from numba import cuda
-import keras
+# import keras
 import tensorflow as tf
+from tensorflow import keras
 
 import detection
 import gen_mask
@@ -324,14 +325,15 @@ class MyMainForm(QMainWindow):
 
     def resizeEvent(self, e):
         # print("w = {0}; h = {1}".format(e.size().width(), e.size().height()))
-        if e.size().width() > 1440:
+        # if e.size().width() > 1440:
+        if e.size().width() > 1600:
             # Here the 1024 is the form height. Then 770 is the height of the groupBox_3
             self.ui.groupBox_3.resize(self.ui.groupBox_3.size().width(), e.size().height() - (1024 - 770) + 8)
 
             self.ui.groupBox.resize(self.ui.groupBox.size().width(), e.size().height() - 35)
 
-            # Here the 1440 is the form width. Then 591 is the width of the groupBox_2
-            self.ui.groupBox_2.resize(e.size().width() - 1440 + 591 - 10, e.size().height()-35)
+            # Here the 1600 is the form width. Then 751 is the width of the groupBox_2
+            self.ui.groupBox_2.resize(e.size().width() - 1600 + 751 - 10, e.size().height()-35)
         QtWidgets.QWidget.resizeEvent(self, e)
 
     def change_GUI_control_status(self, status):
@@ -378,7 +380,12 @@ class MyMainForm(QMainWindow):
 
             included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG', 'tif', 'TIF', 'tiff',
                                    'TIFF']
-
+            # 2022-1-8:
+            # TIF seems sometimes difficult...
+            # Some cameras have 48bit TIF which we cannot process right now
+            # included_extensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'bmp', 'BMP', 'png', 'PNG']
+            #
+            # Let's still support TIF, but give a warning
             photo_list = [fn for fn in os.listdir(self.processFolder)
                          if any(fn.endswith(ext) for ext in included_extensions)]
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1436</width>
-    <height>1015</height>
+    <width>1600</width>
+    <height>1016</height>
    </rect>
   </property>
   <property name="font">
@@ -93,7 +93,7 @@
         <string notr="true">color: rgb(255, 108, 0);</string>
        </property>
        <property name="text">
-        <string>注意：图像需要先进行了星点对齐操作 ！</string>
+        <string>注意：图像最好先进行了星点对齐操作 ！</string>
        </property>
       </widget>
      </item>
@@ -139,6 +139,19 @@ color: rgb(0, 0, 255);</string>
        </property>
        <property name="text">
         <string>此文件夹包含的图像文件 (jpg / bmp / png / tif)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_17">
+       <property name="font">
+        <font>
+         <family>微软雅黑</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>注意：16位深度的 TIF 文件可能无法处理</string>
        </property>
       </widget>
      </item>
@@ -650,7 +663,7 @@ color: rgb(0, 0, 255);</string>
      <rect>
       <x>840</x>
       <y>11</y>
-      <width>591</width>
+      <width>751</width>
       <height>981</height>
      </rect>
     </property>

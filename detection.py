@@ -8,7 +8,7 @@ import shutil
 import threading
 import multiprocessing
 from time import sleep
-from keras_preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 import model
 import settings
@@ -211,6 +211,14 @@ class MeteorDetector:
         self.Current_Image_Detection_Lines = []
         self.Current_Image_Satellites = []
 
+        # 2021-8-14:
+        # - Each image detection needs to open two images: Current_img & Next_img
+        # - The opened Next_img can be stored, then when processing the next image,
+        #   the Next_img can become the Current_img
+        # - This can reduce the disk I/O
+        self.Next_Image_Filename = ''
+        self.Next_Image_to_be_Current_Image = []
+
         self.Thread_Name = thread_name
 
     # When two lines have the similar angel, get the two closest points
@@ -385,8 +393,13 @@ class MeteorDetector:
         # If there's overlap, but are very close, merge them as well
         # In this case we don't need to calculate the closest two points
         # Just return true to merge them
-        if b_overlap and vertical_dist <= settings.LINE_VERTICAL_DISTANCE_FOR_MERGE_W_OVERLAP_THRESHOLD:
-            return True
+        #
+        # 2021-8-14: Added the "if not for_satellite:" checking
+        #            For satellite checking, even if they are overlapped,
+        #            we should consider them as different objects
+        if not for_satellite:
+            if b_overlap and vertical_dist <= settings.LINE_VERTICAL_DISTANCE_FOR_MERGE_W_OVERLAP_THRESHOLD:
+                return True
 
         # Finally, check the most close two points
         close_x1, close_y1, close_x2, close_y2 = \
@@ -833,6 +846,13 @@ class MeteorDetector:
         #
         # This is to be done later...
         #
+        # AttributeError: 'numpy.ndarray' object has no attribute 'depth'
+
+        # img_depth = blur_img.shape[2]
+        # print("image depth: {}".format(img_depth))
+        # if blur_img.depth() == cv2.CV_16U:
+        #     blur_img = cv2.cvtColor(blur_img, cv2.COLOR_BGRA2BGR)
+        blur_img = blur_img.astype(np.uint8)
 
         # blur_img_enh = cv2.GaussianBlur(enhanced_img, (blur_kernel_size, blur_kernel_size), 0)
 
@@ -1068,18 +1088,35 @@ class MeteorDetector:
 
         '''
 
-        filename_w_path = os.path.join(file_dir, orig_filename)
-        # orig_img = cv2.imread(filename_w_path)
+        # - Each image detection needs to open two images: Current_img & Next_img
+        # - The opened Next_img can be stored, then when processing the next image,
+        #   the Next_img can become the Current_img
+        # - This can reduce the disk I/O
+        if self.Next_Image_Filename != orig_filename:
+            # This image was not opened yet
 
-        # Change to this method as a work-around for the issue
-        # in OpenCV PY supporting Chinese path/file name
-        # cv2.IMREAD_UNCHANGED == -1
-        orig_img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
+            filename_w_path = os.path.join(file_dir, orig_filename)
+            # orig_img = cv2.imread(filename_w_path)
+
+            # Change to this method as a work-around for the issue
+            # in OpenCV PY supporting Chinese path/file name
+            # cv2.IMREAD_UNCHANGED == -1
+            orig_img = cv2.imdecode(np.fromfile(filename_w_path, dtype=np.uint8), -1)
+        else:
+            # We had opened this image when processing the previous image
+            # Just reuse it
+            orig_img = copy.copy(self.Next_Image_to_be_Current_Image)
 
         # Do a subtraction with another image, which has been star-aligned
         file_for_subtraction_w_path = os.path.join(file_dir, file_for_subtraction)
         # img_for_subtraction = cv2.imread(file_for_subtraction_w_path)
         img_for_subtraction = cv2.imdecode(np.fromfile(file_for_subtraction_w_path, dtype=np.uint8), -1)
+
+        # Store the "next image"
+        # It will be used as the "current image" when we process
+        # the next one
+        self.Next_Image_Filename = file_for_subtraction
+        self.Next_Image_to_be_Current_Image = copy.copy(img_for_subtraction)
 
         img = cv2.subtract(orig_img, img_for_subtraction)
 
@@ -1338,23 +1375,27 @@ class MeteorDetector:
                 # Get the next image in the list for subtraction
                 # If this image is the last one in the list, get the previous image then
 
-                if index < num_of_images - 1:
+                # 2021-8-14:
+                # For the last image file in the subset, actually it is
+                # and extra one and no real process is needed.
+                #
+                # Example: If we have 4 images in this subset, then
+                #          it would be like this: [img_1, img_2, img3, img2].
+                #          Here img_3 is the real "last image".
+                #          The last "img_2" was added so as to process img_3.
+
+                if index <= num_of_images - 2:
                     next_image_file = image_list[index + 1]
                 else:
                     next_image_file = image_list[index - 1]
 
-                # NOTE:
-                # This function is to be deprecated
-                # self.detect_n_extract_meteor_image_file(file_dir, image_file, save_dir, verbose,
-                #                                         file_for_subtraction=next_image_file)
-
                 self.detect_n_process_the_previous_image(file_dir,
-                                                         image_file,
-                                                         draw_box_file_dir,
-                                                         extracted_file_dir,
-                                                         file_for_subtraction=next_image_file,
-                                                         equatorial_mount=equatorial_mount,
-                                                         verbose=verbose)
+                                                        image_file,
+                                                        draw_box_file_dir,
+                                                        extracted_file_dir,
+                                                        file_for_subtraction=next_image_file,
+                                                        equatorial_mount=equatorial_mount,
+                                                        verbose=verbose)
             else:
                 # Detection without image subtraction
                 # This would be rarely used now...
@@ -1430,6 +1471,7 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
         os.mkdir(extracted_file_dir)
 
     CPU_count = multiprocessing.cpu_count()
+    print("Total CPU core # = {}".format(CPU_count))
 
     # To avoid resource outage
     # 24 cores would consume about 12G memory on 5D Make III images
@@ -1437,24 +1479,28 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
     if CPU_count > settings.MAX_CPU_FOR_DETECTION:
         CPU_count = settings.MAX_CPU_FOR_DETECTION
 
+    print("Will limit the # of CPU core(s) for processing to {}.".format(CPU_count))
+
     num_image_list = len(image_list)
 
     size_per_sublist = math.ceil(num_image_list / CPU_count)
 
     # As we are detecting the meteor objects by subtracting two images,
     # we need to have at least two images in the queue.
-    # And for overhead consideration, make this number to be 3
-    if size_per_sublist < 3:
-        size_per_sublist = 3
+    # And for overhead consideration, make this number to be 8
+    if size_per_sublist < 8:
+        size_per_sublist = 8
 
     # To ensure the thread number <= num_image_list/size_per_sublist
-    # And the last thread should have at least 3 items to process
+    # And the last thread should have at least 8 items to process
     CPU_count = int(num_image_list/size_per_sublist)
-    if num_image_list - size_per_sublist * CPU_count >= 3:
+    if CPU_count <= 0:
+        CPU_count = 1
+    if num_image_list - size_per_sublist * CPU_count >= 8:
         CPU_count += 1
 
     print('\nTotally {} images to be processed by {} CPU cores'.format(num_image_list, CPU_count))
-    print("Each core to handle {} images".format(size_per_sublist))
+    print("Each core to handle {} images".format(min(size_per_sublist, num_image_list)))
 
     thread_set = []
 
@@ -1502,18 +1548,27 @@ def multi_thread_process_detect_n_extract_meteor_from_folder(file_dir,
             # All items left should be added to this subset
             num = (num_image_list - 1) - start_from + 1
 
-            # For the last sub-set, the last_image_needs_detection should be TRUE
-            # last_image_needs_detection = True
             subset_image_list = image_list[start_from:start_from + num]
 
             # In order to process the last image, we have to add one previous
             # image from the list
-            subset_image_list.append(image_list[start_from + num - 1])
+            #
+            # 2021-8-14: The previous image index in the list should be
+            #            (start_from + num - 2), not (start_from + num - 1)
+            #            But there could be extreme case that only one image
+            #            file in the total list, then the (-2) will cause
+            #            out-of-boundary problem. So needs a protection checking.
+            if start_from + num - 2 >= 0:
+                subset_image_list.append(image_list[start_from + num - 2])
+            else:
+                # No way, just one image in the list.
+                # Can only add the same image to avoid program crash.
+                # There will be no detection result.
+                subset_image_list.append(image_list[start_from + num - 1])
         else:
-            # last_image_needs_detection = False
             # Adding one more image in the list
             # The last one doesn't need to be processed
-            # It will be processed in another thread (as the fist one)
+            # It will be processed in another thread (as the first one)
             subset_image_list = image_list[start_from:start_from + num + 1]
 
         # print('\nThread-{0:03d}:'.format(i))
@@ -1597,7 +1652,11 @@ def filter_possible_not_meteor_objects(detection_folder, keep_folder, removed_fo
     filenames = test_generator.filenames
     nb_samples = len(filenames)
 
-    scores_predict = cnn_model.predict_generator(test_generator, nb_samples, verbose=1)
+    # scores_predict = cnn_model.predict_generator(test_generator, nb_samples, verbose=1)
+
+    # 2021-7-22:
+    # To align with TF2 API
+    scores_predict = cnn_model.predict(test_generator, nb_samples, verbose=1)
 
     # There will be three values in each score:
     #   [0]: 'meteor'   : 0.xxxxx
